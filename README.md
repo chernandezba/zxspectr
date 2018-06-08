@@ -32,16 +32,16 @@ Main Menu
 ![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-2.jpg "Main Menu")
 
 
-Main Menu
+Machine Selection
 
-![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-3.jpg "Main Menu")
-
-
-Main Menu
-
-![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-4.jpg "Main Menu")
+![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-3.jpg "Machine Selection")
 
 
-Main Menu
+Load from Real Tape
 
-![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-5.jpg "Main Menu")
+![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-4.jpg "Load from Real Tape")
+
+
+Debug menu
+
+![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-5.jpg "Debug menu")
