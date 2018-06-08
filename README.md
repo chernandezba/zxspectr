@@ -4,7 +4,7 @@ It's a ZX Spectrum emulator written entirely in Assembler. It runs under MS-DOS,
 
 You can try a newer and better emulator, made also by me, for Unix systems (Linux, Mac, Raspberry Pi and others) and Windows here:
 
-http://sourceforge.net/projects/zesarux/
+https://github.com/chernandezba/zesarux
 
 
 Features:
