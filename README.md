@@ -32,3 +32,16 @@ Main Menu
 ![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-2.jpg "Main Menu")
 
 
+Main Menu
+
+![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-3.jpg "Main Menu")
+
+
+Main Menu
+
+![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-4.jpg "Main Menu")
+
+
+Main Menu
+
+![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-5.jpg "Main Menu")
