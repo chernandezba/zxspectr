@@ -1,0 +1,1708 @@
+-----------------------------------------------------------------------------
+ZXSpectr Versi¢n 3.0
+Emulador de ZX Spectrum por C‚sar Hern ndez Ba¤¢
+(16-12-1999)
+-----------------------------------------------------------------------------
+
+
+     
+                              INDICE
+                              ------
+     
+     1  Historia
+     
+     2  Agradecimientos
+     
+     3  Contactar con el autor
+
+     4  El emulador
+      4.1  Ficheros distribuidos
+      4.2  Requerimentos para usar el emulador
+      4.3  L¡nea de comandos de ZXSPECTR.COM
+      4.4  Emulaci¢n del Spectrum
+       4.4.1  La CPU Z80
+       4.4.2  El Teclado
+       4.4.3  El Joystick Kempston
+       4.4.4  El Sonido
+       4.4.5  La Pantalla
+       4.4.6  128k de memoria
+       4.4.7  Emulaci¢n de Cinta
+       4.4.8  Carga directa desde cinta de casette
+       4.4.9  Ficheros Snapshot
+       4.4.10 Emulaci¢n del Inves Spectrum+
+       4.4.11 El puerto "bus idle"
+
+     5  Opciones del men£
+      5.1  Cargar
+      5.2  Grabar
+      5.3  Selecci¢n de ordenador
+      5.4  Opciones de Pantalla
+       5.4.1  Cargar Pantalla
+       5.4.2  Grabar Pantalla
+       5.4.3  Control de Brillo
+       5.4.4  Protector de Pantalla
+       5.4.5  Actualizacion de Pantalla
+       5.4.6  Frameskip
+
+      5.5  Men£ Depuraci¢n
+       5.5.1  Generar RESET
+       5.5.2  Generar NMI
+       5.5.3  Ver Registros
+       5.5.4  Pokear
+
+      5.6  Emulaci¢n de Cinta
+       5.6.1  Insertar/Extraer fichero de Entrada
+       5.6.2  Fichero
+       5.6.3  Insertar/Extraer fichero de Salida
+       5.6.4  Fichero
+       5.6.5  Cargar cualquier Flag
+       5.6.6  Cargar desde casette
+        5.6.6.1  Baudios
+        5.6.6.2  Longitud onda guia
+        5.6.6.3  Longitud tono guia
+        5.6.6.4  Longitud onda ceros
+        5.6.6.5  Longitud onda unos
+        5.6.6.6  Filtro de Entrada
+        5.6.6.7  Volumen canal izq.
+        5.6.6.8  Volumen canal der.
+        5.6.6.9  Ver Franjas del Borde
+        5.6.6.10 Autocorrecci¢n de Checksum
+        5.6.6.11 Comenzar a Cargar
+
+      5.7  Ajustes de Hardware
+       5.7.1  Teclado Issue0/1
+       5.7.2  Disparador Autom tico
+       5.7.3  Frec. disparador
+       5.7.4  Valor POKE a ROM
+       5.7.5  Memoria compartida
+
+      5.8  Control de sonido
+       5.8.1  Salida Altavoz
+       5.8.2  Modo Salida a Sblaster
+       5.8.3  Frec. Salida Sonido
+       5.8.4  Chip AY presente
+       5.8.5  Salida Chip AY
+       5.8.6  Modo de Stereo
+       5.8.7  Emulacion de Ruido
+       5.8.8  Refresco Chip AY
+       5.8.9  Ver Registros Chip AY
+
+      5.9  Seleccion de Idioma
+      5.10 Pausa
+      5.11 Valocidad CPU
+      5.12 Volver el emulador
+      5.13 Salir del emulador
+
+     6  Utilidades incluidas
+      6.1  LINEASMP.EXE
+      6.2  SMPATAP.EXE
+      6.3  TAPABIN.EXE
+      6.4  SP_Z80.EXE
+      
+     7  Utilidades en formato cinta (TAP)
+      7.1  SPED52.TAP
+      7.2  CONVERSO.TAP
+      7.3  REALDEBU.TAP
+      7.4  CURSORDR.TAP          
+
+
+     
+------------------------------------------------------------------------------
+
+
+     
+     1     Historia
+     --------------
+     
+     Desde que soy muy peque¤o, en mi casa ya habia un ordenador; he tenido
+varios, la mayor parte de ellos son Sinclair. El primero que tuvimos fue un
+Sinclair ZX-81. Tenia un teclado completamente plano, no media mas de un
+palmo de ancho y se calentaba una barbaridad. Funcionaba con solo 1K de
+memoria RAM (que luego ampliamos a 16k), y el procesador era un Z-80. El
+sistema de almacenamiento era en cinta de casette, a una velocidad de 300
+baudios.
+     Despu‚s tuvimos el ZX Spectrum 48k, de teclas de goma. A aqu‚l
+ordenador le sacamos mucho provecho, aparte de tener que cambiarle unas
+tres veces la membrana del teclado y otras tantas el disipador de calor.
+     En 1984, cuando el Spectrum ya habia tenido ‚xito, Sinclair lanz¢ un
+mega-ordenador, el QL, con procesador Motorola 68008, que tambi‚n
+compramos. Los que hayan tenido un QL sabr n que al poco tiempo de salir a
+la venta, la casa Sinclair fu‚ absorvida por Amstrad y, por lo menos aqu¡
+en Espa¤a, se dej¢ de hacer programas para ‚l.
+     Despu‚s de esto compramos dos Inves Spectrum+, que era como un
+Spectrum+ de Sinclair pero de la marca Investr¢nica, que tenia el
+inconveniente de que no se o¡a el sonido en varios juegos (se pod¡a oir
+pokeando en la ROM!). Con el tiempo pude conseguir un Spectrum +2A, a
+cambio de un Inves.
+     
+     Ya en los tiempos del PC, yo todav¡a segu¡a programando con el +2A, y
+tuve el primer contacto con un emulador, el SPECTRUM de Pedro Gimeno, y m s
+tarde, el Z80 de Gerton Lunter. Desde entonces, tuve ganas de crear un
+emulador propio, y m s que nada, poder cargar mis viejos juegos del
+Spectrum sin tener que comprar ning£n emulador ni hacer ning£n circuito
+electr¢nico.
+     En 1996 hice la primera versi¢n, escrita totalmente en Assembler,
+usando la ROM del emulador de Pedro Gimeno y los ficheros SP. No fue hasta
+dos a¤os m s tarde, en 1998, cuando compremos un Pentium 133 con tarjeta
+Sound Blaster y pude hacer una rutina para cargar los juegos desde cinta de
+cassette. Entonces pude cargar las ROMs de mi +2A y le a¤ad¡ al emulador
+los 128k y la emulaci¢n del chip de sonido.
+
+     Desde entonces he ido haciendo varias versiones y mejorando
+constantemente el emulador, y lo he ido distribuyendo a mis amigos. Ha sido a
+partir de la versi¢n 1.5 cuando empec‚ a distribuirlo a trav‚s de Internet.
+
+     El emulador no funciona al 100% con todos los juegos, pero no he
+encontrado todav¡a el bug. Agradecer¡a a cualquiera que encuentre el fallo
+me lo notificase, para as¡ poder hacer un emulador completo. Creo que el
+error tiene que ver con el flag P/V.
+     
+     Pese a esto, creo que el emulador funciona bastante bien, tiene diversas
+opciones que no he encontrado en otros emuladores, y adem s no hay que
+pagar nada por usarlo, pudiendo incluso cargar los juegos desde cinta de
+casette.
+
+     Quiz s esta sea la £ltima versi¢n de mi emulador que haga para MS-DOS;
+hace tres meses instal‚ LINUX en mi ordenador y he descubierto un potente
+sistema operativo con el que poder sacar el m ximo partido a la CPU.
+Adem s, el c¢digo fuente de mi emulador se ha vuelto bastante monol¡tico y
+estoy un tanto cansado de programar en Ensamblador.
+     Quiero reescribir completamente el emulador en lenguaje C y adaptado
+para Linux, a¤adirle emulaci¢n del Pentagon y el Scorpion, soporte de formato
+TZX, y algunas cosas m s.
+     
+     
+     
+     2     Agradecimientos
+     ---------------------
+     
+     Quisiera agradecer la colaboraci¢n y ayuda de las siguientes personas:
+     
+     . Ivan Daunis, por el PCGPE y el INTERVUE
+     . Rub‚n Parra, por el Spectrum +2A
+     . A mis amigos de M‚xico
+     . A mis padres y hermanos
+     . A Amstrad, por permitir a todos los que hacemos emuladores que usemos 
+       las ROMS
+     . Samir Ribic, por ayudarme a subir el emulador, y por toda la
+       informaci¢n presente en su emulador Warajevo.
+     . Martijn van der Heide, por instalar el emulador en la FTP
+     . Phillip Kendall, por decirme un fallo con la instrucci¢n BIT
+     . Pedro Gimeno, por los tiempos de varias instrucciones.
+     . Rodolfo Edison Guerra, por incluir mi emulador en su SpecBase.
+     . A todos aquellos que hacen demos para el Spectrum, pues son un buen
+       campo de pruebas para mi emulador.
+
+     . Y sobretodo a este genio que es Clive Sinclair.
+     
+     
+     3     Contactar con el autor
+     ----------------------------
+     
+     Si quieres darme sugerencias para el emulador o decirme los fallos que
+tenga, puedes contactar conmigo a traves del siguiente e-mail:
+     chernandezba@hotmail.com
+     
+
+     Tambi‚n he hecho otras utilidades relacionadas con el Spectrum:
+
+     - Conversor de cintas de cassette Spectrum a ficheros .TAP: similar al
+SMPATAP, pero leyendo directamente desde cinta de cassette y funcionando en
+LINUX.
+     - Conversor de cintas de cassette de ZX-81 a ficheros .P, ejecutables
+con el emulador de ZX81 XTENDER de Carlo Delhez.
+     
+     
+     4     El Emulador
+     -----------------
+     
+     4.1   Ficheros distribuidos
+     ---------------------------
+     
+     - Ficheros necesarios para emular el Spectrum:
+     
+     ZXSPECTR.COM   El emulador en si
+
+     48.ROM         Contiene la ROM del Spectrum 16k/48k
+     INVES.ROM      La ROM del Inves Spectrum+
+     128.ROM        La ROM del Spectrum 128k
+     P2.ROM         ROM del Spectrum Plus 2
+     P2S.ROM        ROM del Spectrum Plus 2 (Espa¤ol)
+     P2F.ROM        ROM del Spectrum Plus 2 (Franc‚s)
+     P2A40.ROM      ROM del Spectrum Plus 2A (Versi¢n 4.0)
+     P2A41.ROM      ROM del Spectrum Plus 2A (Versi¢n 4.1)
+     P2AS.ROM       ROM del Spectrum Plus 2A (Espa¤ol)
+
+     ZXSPECTR.SCR   Pantalla inicial
+     
+     - Documentaci¢n:
+     
+     ZXSP_ESP.TXT   El fichero que estas leyendo
+     ZXSPECTR.TXT   El mismo fichero pero en ingl‚s
+     NEWS_ESP.TXT   Mejoras y bugs de todas las versiones, en espa¤ol
+     NEWS.TXT       Mejoras y bugs de todas las versiones, en ingl‚s
+
+     
+     -Utilidades:
+     
+     LINEASMP.EXE   Utilidad para leer el sonido desde casette
+     SMPATAP.EXE    Utilidad para convertir el sonido a ficheros .TAP.
+     TAPABIN.EXE    Utilidad para convertir el contenido de los ficheros
+                    .TAP a ficheros .BIN
+     SP_Z80.EXE     Utilidad para convertir entre los formatos SP y Z80
+                    (s¢lo de 48k) 
+     
+     - Programas y juegos:
+     
+     SPED52.TAP     Ensamblador/desensamblador para 128k. Incluye c¢digo
+                    fuente en su propio formato (SPED)
+     CONVERSO.TAP   Conversor de codigos fuentes de formatos GENS, TED y
+                    SPED. Incluye c¢digo fuente
+     REALDEBU.TAP   Desensambladores para 48k y 128k, con c¢digo fuente
+     CURSORDR.TAP   Programa de dibujo. Incluye c¢digo fuente
+
+     ROCMAN.TAP     Juego ROCMAN de Xavi Mart¡n Puch‚.
+     TOI.TAP        Las 4 partes (y las intros) del TOI ACID GAME
+     SIRFRED.TAP    Juego Sir Fred de Made In Spain
+     RICK.TAP       El Rick Dangerous
+     CANCIONE.TAP   Programa en BASIC con canciones en formato PLAY
+     CD.TAP         Programa que simula un CD, con varias canciones. Es de
+                    los primeros programas de Dominio P£blico para Spectrum
+     HISTERIA.TAP   Juego Histeria
+     BUBBLE.TAP     Juego BUBBLE BOBBLE
+     BINARY_L.TAP   Mega-demo para 128k
+
+     TOICLAVE.ZX    C¢digos para el TOI ACID GAME
+     ABADIA.ZX      Juego Abadia del Crimen (128k)
+     JETPAC.ZX      JETPAC
+     SABRE.ZX       El SABRE WULF
+     XENO.ZX        Juego XENO
+     GHOSTS.ZX      Juego GHOSTBUSTERS
+     
+     
+     
+     4.2   Requerimentos para usar el emulador
+     -----------------------------------------
+     
+     Los requisitos m¡nimos para ejecutar el emulador son: 
+     procesador Intel 8088, sistema MS-DOS, 434k libres en RAM (en su versi¢n
+m xima), y tarjeta de video VGA. Opcionalmente, para una emulaci¢n r pida de
+los 128k del Spectrum se debe tener memoria EMS 3.0 o superior, una
+tarjeta Sound Blaster Pro o compatible para poder emular el chip de sonido y
+cargar desde cassette.
+
+     El emulador puede ejecutarse con una CPU 8088, pues no se usan
+instrucciones del 386, pero para que funcione con una velocidad comparable a
+la del Spectrum se necesita un procesador a 133MHz como m¡nimo.
+     Se debe ejecutar en sesi¢n de MS-DOS, no en ventana de Windows, pues
+sino la emulaci¢n ser  mucho mas lenta.
+
+     
+     
+     4.3   L¡nea de comandos de ZXSPECTR.COM
+     ---------------------------------------
+     
+     Al cargar el emulador, se pueden especificar par metros opcionales y
+un nombre de fichero (.SP o .ZX) para cargar. Los par metros son:
+     
+     /?        Muestra la pantalla de ayuda
+     /Red      Forzar modo de pantalla con tono Rojo
+     /Green    Forzar modo de pantalla con tono Verde
+     /Blue     Forzar modo de pantalla con tono Azul
+     Estas tres opciones se pueden combinar para ejecutar el emulador en
+distintos tonos, por ejemplo /Green/Red para ejecutarlo en amarillo, o las
+tres a la vez para ejecutar en tramas de grises.
+
+     /Nosb     No utilizar tarjeta Sound Blaster
+     /No386    No detectar procesador 386
+     /Noems    No usar la memoria expandida
+     /Eng      Ver los textos del men£ en Ingl‚s
+
+     /16k      Emular Spectrum 16k
+     /48k      Emular Spectrum 48k
+     /Inves    Emular Inves Spectrum+
+     /128k     Emular Spectrum 128k
+     /P2       Emular Spectrum Plus 2
+     /P2F      Emular Spectrum Plus 2 (Frances)
+     /P2S      Emular Spectrum Plus 2 (Espa¤ol)
+     /P2A40    Emular Spectrum Plus 2A (ROM v4.0)
+     /P2A41    Emular Spectrum Plus 2A (ROM v4.1)
+     /P2AS     Emular Spectrum Plus 2A (Espa¤ol)
+
+     
+     
+     4.4   Emulaci¢n del Spectrum
+     ----------------------------
+
+     Los modelos que se emulan del Spectrum son los siguientes:
+     (Grupo 48k)
+     Sinclair 16k (Emulacion parcial, solo al escribir)
+     Sinclair 48k
+     Inves Spectrum+
+     
+     (Grupo 128k) - Los 4 son practicamente iguales, lo £nico que cambia es
+     la ROM y la apariencia externa:
+     Sinclair 128k
+     Amstrad +2
+     Amstrad +2 - ROM en Franc‚s
+     Amstrad +2 - ROM en Espa¤ol
+
+     (Grupo +2A)
+     Amstrad +2A (ROM v4.0)
+     Amstrad +2A (ROM v4.1)
+     Amstrad +2A - ROM en Espa¤ol
+ 
+     4.4.1 La CPU Z80
+     ----------------
+     
+     La emulaci¢n de la CPU est  sincronizada, pese a que no emula la memoria
+compartida. Sin embargo, se puede activar una pseudo-emulaci¢n de la memoria
+compartida, que queda lejos de ser real pero que en algunos casos es
+efectiva: lo que hace es que si una instrucci¢n se ejecuta en la memoria
+compartida (16384-32767 en 48k y RAMS 4,5,6,7 en 128k) o se hace un IN o OUT
+a un puerto par, ‚sta instrucci¢n durar  un 15% m s de su tiempo real.
+Adem s, en el men£ hay una opci¢n para especificar la velocidad relativa de
+la emulaci¢n.
+
+     La sincronizaci¢n se realiza de manera similar a como la hace el
+Warajevo, es decir, se pone la frecuencia del reloj interno del PC con el
+tiempo que la ULA del Spectrum tarda en dibujar una linea de pantalla. Por
+ejemplo, en 48k, se tiene una frecuencia de 3.5 Mhz, y cada linea dura 224
+estados. Por lo tanto, el tiempo que se tarda en dibujar una linea en el
+Spectrum es de 224/3.5 Mhz=64 microsegundos, que equivale a una frecuencia de
+15625 Hz. Con este m‚todo, desde Windows no va bien, pues parece ser que no
+puede soportar una frecuencia tan alta. As¡, para que vaya bien, se debe
+ejecutar en sesi¢n real de MS-DOS. 
+
+     Cuando el emulador ejecuta 224 estados (o 228) espera a que se produzca
+la interrupci¢n; si hay instrucciones que tardan mucho tiempo en emularse
+(por ejemplo, de paginaci¢n) puede ser que se pierda sincronismo. Entonces,
+aparecer  un peque¤o punto blanco en la parte superior izquierda de la
+pantalla (parecido al del emulador x128) indicando que ha habido p‚rdida de
+sincronismo.
+
+     El emulador soporta la emulaci¢n de intrucciones no documentadas, como
+la de los registros HX,LX,HY,LY, las intrucciones SLL, los 8 RETS con prefijo
+ED:RETN(ED45), RETI(ED4D), RET3(ED55), RET4(ED5D), RET5(ED65),
+RET6(ED6D),RET7(ED75), RET8(ED7D), y los NEG y IM repetidos. Tambi‚n el OUT
+(C),F (ED71) y el IN F,(C) (ED70).
+     Tambi‚n las instrucciones de manipulaci¢n de bits del tipo (XY+d)
+(DD o FD + CB) con 1 argumento m s, es decir, se realiza la instrucci¢n
+normal y el resultado se almacena en (XY+d) y en el registro indicado,
+por ejemplo: SET 3,(IX+0),C ->Se pone el bit 3 de (IX+0) a 1 y el valor de
+(IX+0) se guarda en C.
+     Tambi‚n soporta el registro R, que es incrementado en 1 despu‚s de
+cada instrucci¢n, entendiendo tambi‚n los prefijos como instrucciones,
+exceptuando las intrucciones con prefijo DDCB y FDCB, que incrementan en 2.
+El registro R es de 8 bits, aunque al incrementarlo s¢lo se usan los 7
+inferiores, y el bit 8 permanece constante (pudiendo modificarlo con la
+instrucci¢n LD R,A).
+     Los bits 3 y 5 del registro de flags s¢lo se emulan parcialmente, no
+actuando exactamente como en un Spectrum real; se mantienen constantes
+despu‚s de ejecutar un POP AF o un EX AF,AF'. Los bits de signo y de paridad
+tienen su valor correcto despu‚s de una instrucci¢n BIT.
+     
+     Emula tambi‚n los modos de interrupciones de Spectrum: IM0 y IM1, que
+saltan a la direcci¢n 38H (56), y el modo IM2. Se ejecutan con una frecuencia
+de 50Hz. Tambi‚n se puede provocar una interrupci¢n NMI, saltando a la
+direcci¢n 66H (102).
+     
+     Debo destacar que la emulaci¢n del Z80 todav¡a incluye bugs, que no he
+podido determinar cuales son.
+
+
+     
+     4.4.2 El Teclado
+     ----------------
+     
+     El teclado que emula es el del Spectrum 48k, o sea, de 40 teclas. Las
+teclas ALT y CTRL act£an las dos como el Symbol Shift. Las teclas de cursor,
+junto con la tecla INS emulan el Joystick Kempston, y la tecla ESC es para
+ir al men£ del emulador.
+     Emula los dos tipos de teclado Issue 1 y Issue 2 (bit 6 del puerto de
+teclado alzado o no).
+     
+     4.4.3 El Joystick Kempston
+     --------------------------
+     
+     El joystick kempston es emulado a trav‚s de las teclas de cursor y la
+tecla Ins como disparo (tambien valen los cursores y el Ins del teclado
+num‚rico). Cualquier puerto con el bit 5=0 representa al joystick kempston.
+     Tambi‚n emula un disparador autom tico, de velocidad variable,
+que se encontraba presente en aquellos viejos joysticks del Spectrum.
+
+     4.4.4 El Sonido
+     ---------------
+     
+     El sonido del Spectrum 48k se genera por el puerto 254, en los bits 3 y
+4. El bit 3 s¢lo se usa al grabar desde el BASIC, y el bit 4 es el que se
+usa para hacer sonido normalmente. El bit 3 hay pocos emuladores que lo usen,
+pero en ‚ste s¡ que se emula, y es debido a la emulaci¢n del Inves Spectrum+
+(para ver detalles del Inves, leer la secci¢n 4.4.10).
+     En el Spectrum, cualquier valor a los bits 3 y 4 que sean diferentes al
+valor £ltimo enviado producir  sonido, y en el ZXSpectr tambi‚n se hace as¡.
+El sonido es enviado al PC Speaker (el altavoz interno del PC) o a la
+Sound Blaster. Si se dirige a la Sound Blaster se dispone de dos m‚todos: el
+modo directo y el modo por interrupciones.
+     En el modo directo se mandan datos a la tarjeta de sonido cuando se
+generan sonidos en el Spectrum; con este modo da buenos resultados (lo he
+probado incluso con tarjetas SB compatibles); sin embargo he notado que en la
+tarjeta que yo tengo, una IBM MWAVE, que es compatible Sound Blaster, no va
+muy bien.  Con la MWAVE, s¢lo se oyen bien el GhostsBusters (la voz del
+principio), el XENO, el Manic Miner y el JetSet Willy; los otros juegos que
+he probado apenas se oye algo. Esto es debido a que se hace el sonido con una
+frecuencia demasiado alta.
+     En el modo por interrupciones, se mandan datos al altavoz teniendo una
+frecuencia de muestreo fija (8 o 5 KHz). Con este modo se oye bien en todos
+los juegos, pero tiene el inconveniente de que ralentiza un poco el emulador.
+
+     El emulador soporta el chip de sonido del Spectrum 128k (AY-3-8912),
+usando la tarjeta Sound Blaster. Incluye un "refresco" del sonido; esto es
+porque no he encontrado manera posible de hacer un sonido con la Sound
+Blaster (modo Adlib) y que se quede siempre activo. Consiste en desactivar y
+activar cada medio segundo los canales de sonido. El efecto es bastante bueno
+en la mayor¡a de los casos, aunque se oye un peque¤o "clic" cada cierto
+tiempo. En algunos emuladores que hacen el sonido del AY con la Sound Blaster
+el sonido va bajando de volumen hasta que no se oye.
+
+     Tambi‚n se emula el sonido est‚reo llamado ACB/ABC; esto quiere decir
+que de los tres canales de sonido, hay uno para cada altavoz y el tercero va
+al altavoz central (los dos altavoces a la vez). En el modo ACB, el canal A
+va al altavoz izquierdo, el B va al derecho y el C al central. En el modo
+ABC, el A va al izquierdo, el C al derecho y el B al central. S¢lo he
+encontrado algunas demos que hagan uso del sonido est‚reo.
+
+     El chip de sonido se controla por dos puertos, los cuales tienen
+el bit 15 del puerto a 1 y el bit 1 a cero (A15=1,A1=0). Si el bit 14 esta a 1
+(t¡picamente el puerto 65533) es el puerto de selecci¢n del registro (salida)
+o muestra el valor del registro (entrada), y si el bit 14 esta a 0
+(t¡picamente el puerto 49149) es el puerto de envio del valor al registro
+(s¢lo salida). Digo que t¡picamente son el 65533 y el 49149 porque es como se
+menciona en los manuales, pero he encontrado muchos juegos y demos que usan
+otros puertos.
+
+     Los registros del chip son:
+
+     R0 Ajuste fino del tono, canal A 
+     R1 Ajuste aproximado del tono, canal A 
+     R2 Ajuste fino del tono, canal B 
+     R3 Ajuste aproximado del tono, canal B 
+     R4 Ajuste fino del tono, canal C 
+     R5 Ajuste aproximado del tono, canal C
+
+     El tono de cada canal es un valor de 12 bits que se forma combinando los 
+bits D3-D0 del registro de ajuste aproximado y los bits D7-D0 del registro de
+ajuste fino. La unidad b sica del tono es la frecuencia de reloj dividida por
+16 (es decir, 110.83 KHz).
+     Como el contador es de 12 bits, se puede generar frecuencias de 27 Hz a 
+110 KHz.
+
+     R6  Control del generador de ruido, D4-D0
+     El periodo del generador de ruido se toma contando los cinco bits 
+inferiores del registro de ruido cada periodo del reloj de sonido dividido 
+por 16.
+     R7 Control del mezclador y de E/S
+        D7 No utilizado
+        D6 1=puerta de entrada, 0=puerta de salida
+        D5 Ruido en el canal C
+        D4 Ruido en el canal B
+        D3 Ruido en el canal A
+        D2 Tono en el canal C
+        D1 Tono en el canal B 
+        D0 Tono en el canal A
+
+     Este registro controla la mezcla de ruido y tono para cada canal y la 
+direccion de la puerta de E/S de ocho bits. Un cero en un bit de mezcla 
+indica que la funcion est  activada.
+
+     R8  Control de amplitud del canal A
+     R9  Control de amplitud del canal B
+     RA  Control de amplitud del canal C
+       D4  1=utilizar generador de envolvente
+           0=utilizar el valor de D3-D0 como amplitud
+       D3-D0 Amplitud
+     Estos tres registros controlan la amplitud de cada canal y si ‚ste debe
+ser modulado o no por los registros de envolvente. En el emulador no se
+generan envolventes, el volumen es constante a un nivel medio.
+
+     RB  Ajuste aproximado del periodo de envolvente
+     RC  Ajuste fino del periodo de envolvente
+     Los valores de ocho bits de RB y RC se combinan para producir un n£mero 
+de 16 bits que se cuenta en unidades de 256 por el periodo del reloj de sonido.
+Las frecuencias de envolvente pueden estar entre 0.1 Hz 6 KHz.
+
+     RD  Control de envolventes
+       D3 Continua
+       D2 Ataque
+       D1 Alternada
+       D0 Sostenida 
+
+     RE  Controla el RS-232, el KeyPad, y el MIDI (no emulado)
+     RF  No se usa
+     
+
+     4.4.5 La Pantalla
+     -----------------
+     
+     La tarjeta de video necesaria para emular el Spectrum debe ser una VGA.
+Se dispone de los 16 colores del ZX Spectrum y del parpadeo real (intercambio
+de los valores de PAPER y INK cada 1/2 segundo). Se puede controlar el brillo
+de los colores.
+    
+     La actualizaci¢n de la pantalla se realiza por interrupciones, es decir,
+cuando se completan 224 o 228 estados (el equivalente a una linea del
+Spectrum) se dibuja esa linea en pantalla. Este m‚todo es en general m s
+lento que el que se usaba antes de la versi¢n 3.0, pero resulta m s r pido
+en juegos y demos que hacen efectos con colores en alta resoluci¢n. La
+emulaci¢n del border es a nivel de l¡nea, con lo que demos o juegos (como el
+Super Wonder Boy) que dibujan letras en ‚l, no se ver n. Adem s, s¢lo se
+emula las dos partes laterales del borde, no la superior ni inferior.
+     Se dispone de dos m‚todos de actualizaci¢n de pantalla: alta o baja.
+Cuando se tarda m s tiempo del normal en ejecutar 224 estados (una l¡nea) hay
+p‚rdida de sincronismo; en el m‚todo de actualizaci¢n de pantalla bajo, esa
+l¡nea no se dibuja, lo cual hace m s r pido el emulador. En el m‚todo alto,
+la l¡nea se dibuja cuando hay un tiempo de espera de final de linea (cuando
+se tarda menos tiempo del normal en ejecutar 224 estados), pero esto hace m s
+lento el emulador.
+     Tambi‚n se tiene un par metro llamado "frameskip" (o salto de p gina);
+este valor indica cada cuantas interrupciones del Spectrum (de las 50 por
+segundo) se actualiza la pantalla. Es decir, un valor de 1 actualiza la
+pantalla 50 veces por segundo. Un valor de 2, actualizar  la pantalla 25
+veces, etc.
+     Tanto el m‚todo de actualizaci¢n de pantalla como el frameskip deber n
+ser ajustados si se dispone de una CPU menor a un Pentium 166
+(aproximadamente); si se dispone de un ordenador r pido, se pueden dejar los
+valores m ximos.
+     
+     El emulador posee un salvapantallas, que no quiero describir c¢mo es;
+prefiero que lo veas por t¡ mismo. Se activa cuando no se pulsa ninguna
+tecla durante 2 minutos.
+     
+     
+     4.4.6 128k de memoria
+     ---------------------
+     
+     Los 128k se pueden emular con memoria expandida (EMS) o con memoria
+RAM. Con EMS la paginaci¢n se realiza de manera instant nea; en cambio, con
+memoria RAM puede ser bastante lento, aunque es un poco m s r pido si el
+procesador es 386 o superior. El emulador autodetecta si el procesador es
+386 o superior; esto lo he probado en un XT y en Pentium, pero no en un
+286. Si se bloquea al ejecutar el emulador, y tienes un 286 o 186, prueba
+con el par metro /no386.
+     La memoria libre que se requiere para cargar el emulador es:
+      . Con EMS: 178k en RAM y 192k de EMS
+      . Sin EMS: 434k en RAM
+     
+     La paginaci¢n del 128k se realiza mediante el puerto 32765 (realmente es
+cualquier puerto con A1=0 y A15=0). La descripci¢n del puerto 32765 es:
+     D0 a D2   Seleccion de RAM
+     D3        Seleccion de pantalla (pantalla en RAM 5 o RAM 7)
+     D4        Seleccion de ROM
+     D5        Inhabilitaci¢n de la paginacion
+
+     Debido a un error interno en el 128k (pero no en un +2A), si se lee
+desde ese puerto, lo que en realidad pasa es que se hace un OUT a ese puerto
+con el valor 255, por lo que si estamos en 128 BASIC, se resetear  el
+ordenador. Esta caracter¡stica tambi‚n se emula.
+
+     La paginaci¢n del +2A se realiza mediante dos puertos: el 32765 (pero
+solamente el 32765) y el 8189.
+     
+     La descripci¢n del puerto 8189 es:
+     
+     D0        Decide si D1 y D2 afectan a la ROM o a la RAM    (1)
+     D1 y D2   Conmutacion de ROM/RAM                           (2)
+     D4        Motor del disco (no emulado)
+     D5        Se¤al STROBE en la puerta paralelo (activa a nivel bajo)
+               (no emulado)
+     
+     (1) Nota: En el manual se menciona erroneamente como bit D3
+     (2) Nota: En el manual se mencionan erroneamente como bits D0 y D1
+     
+     Cuando el bit 0 del puerto 8189 esta a 0, la ROM se selecciona
+mediante el bit 4 de 32765 (bit bajo de la ROM) y el bit 2 de 8189 (bit
+alto de la ROM):
+     
+     Bit 2 de 8189       Bit 4 de 32765      ROM que entra
+     -------------       --------------      -------------
+     
+          0                   0                   0
+          0                   1                   1
+          1                   0                   2
+          1                   1                   3
+     
+     Cuando el bit 0 del puerto 8189 esta a 1, los bits 1 y 2 controlan qu‚
+combinaci¢n de paginas de RAM ocupan los 64K posibles:
+     
+     Bit 2 de 8189       Bit 1 de 8189       Paginas de RAM
+     -------------       -------------       --------------
+                    
+          0                   0              0,1,2,3
+          0                   1              4,5,6,7
+          1                   0              4,5,6,3
+          1                   1              4,7,6,3
+     
+     
+     4.4.7 Emulaci¢n de Cinta
+     ------------------------
+
+     La emulaci¢n de la cinta desde dentro del emulador se realiza mediante
+ficheros .TAP. Estos ficheros fueron creados en el emulador Z80 de Gerton
+Lunter. Los ficheros .TAP contienen una serie de bloques en el que cada uno
+identifica los datos grabados de cinta. Cada bloque tiene el formato:
+
+     WORD que indica la longitud de los datos que vienen a continuaci¢n
+(incluyendo flag y checksum).
+     BYTE que indica el flag del bloque grabado (como en una cinta real: 0
+para cabeceras y 255 para datos).
+     DATOS: Datos grabados.
+     BYTE que indica el checksum de los datos (incluyendo el flag). Resulta
+de hacer un XOR de todos los datos.
+
+     Ejemplo:
+     SAVE "ROM" CODE 0,2
+     Fichero .TAP generado:
+      
+             |------ Datos generados por el Spectrum|       |---------|
+       13 00 00 03 52 4f 4d 7x20 02 00 00 00 00 80 f1 04 00 ff f3 af a3
+
+     ^^^^^  Longitud: 19 bytes (17 bytes+flag+checksum)
+             ^^    flag 
+                ^^ primer byte de la cabecera, indicando BASIC (3)
+
+       nombre      ^^^^^^^^^^^^^
+       informacion de cabecera   ^^^^^^^^^^^^^^^^
+     checksum de cabecera (incluyendo flag)        ^^
+     longitud segundo blque                           ^^^^^
+       flag                                                 ^^
+       primeros 2 bytes de la ROM                              ^^^^^
+       checksum                                                      ^^
+
+     Estos ficheros son usados desde dentro del emulador de manera que
+cualquier operaci¢n LOAD o SAVE es efectuada mediante estos ficheros.
+Se deben especificar los ficheros .TAP a usar desde el men£.
+     Las rutinas de LOAD y SAVE empiezan en la ROM en las direcciones 1366 y
+1218 respectivamente. Si se ejecutasen esas rutinas de la ROM tal cual, lo
+£nico que obtendr¡amos desde el emulador seria una serie de franjas en el
+BORDER al grabar y al cargar. Para poder usar los ficheros .TAP, el emulador
+modifica las rutinas de la ROM (cuando se especifican los ficheros .TAP a
+usar), para que envien una serie de valores a unos puertos determinados que
+yo me he inventado. Estos puertos son el 204, 205 y 206. Antes de cargar o
+grabar un bloque, se envian una serie de caracteres ASCII al puerto
+CCH=204. El primero de estos caracteres es el c¢digo 255, que indica el
+inicio de una operaci¢n. Los siguientes son :
+"C"=67,"I"=73,"N"=78,"T"=84,"A"=65.  En el caso de que alguno de los
+caracteres siguientes no coincida, el puerto queda "bloqueado", y se debe
+inicializar mandando el 255 del inicio.  A partir de aqu¡ se puede iniciar la
+operaci¢n de cargar o grabar.
+
+     En el caso de cargar, se debe hacer un OUT con un valor cualquiera al
+puerto 205. Los registros deben estar as¡: se indica el flag en A', la
+longitud en DE, el inicio en IX, y el flag Z' debe estar alzado si se quiere
+cargar un bloque independientemente de su flag. Estos registros no los he
+usado as¡ de manera caprichosa, es el valor con el que entran en un Spectrum
+normal a partir de la direcci¢n 1378. Cuando se ha cargado el bloque, se
+indica si ha habido error (NC y registro A=no cero), o no error (C y Registro
+A=cero). Se permite la carga de datos mas cortos de lo especificado en el
+fichero .TAP, tomando como byte de checksum el siguiente a leer.
+     La verificaci¢n de un bloque no se permite (el emulador carga el bloque
+independientemente de si se especifica verificar o no).
+     El flag Z' es puesto a 0 en la rutina de la ROM, pero se puede entrar
+alternativamente en la direcci¢n 1378 poniendo el flag Z' a 1, de manera que
+"enga¤a" al Spectrum y le dice que no ha de distinguir el flag, carg ndolo
+como un byte cualquiera. Esto se comporta as¡ en un Spectrum, y tambi‚n en el
+emulador. Se usa en programas copiadores y en algunos juegos; sin embargo, he
+encontrado fallos con algunos juegos, como el ROCMAN, de manera que se puede
+desactivar desde el Men£ la opci¢n de poder cargar cualquier flag (flag Z'
+siempre ir  a 0). Este mismo juego lo he intentado cargar desde el emulador
+Z80 (3.05) y se borra; en el Warajevo (2.51) no se borra, pues no permite la
+carga de cualquier flag (en modo de carga fast).
+
+     Cuando se inserta un fichero para cargar, la ROM est  as¡:
+
+     Direcci¢n     Instrucci¢n
+     1366          INC D ;Poner Z a cero (NZ)
+     1367          EX AF,AF' ;Guardar reg. A,flag Z,flag C
+     1368          DEC D ;Restaurar D
+     1369          DI
+     1370          LD A,15
+     1372          OUT (254),A
+     1374          LD HL,1343
+     1377          PUSH HL
+
+     Y esto es lo que modifica el emulador:
+ 
+     Direcci¢n     Instrucci¢n
+     1378          LD A,255
+     1380          OUT (204),A
+     1382          LD A,"C"
+     1384          OUT (204),A
+     1386          LD A,"I"
+     1388          OUT (204),A
+     1390          LD A,"N"
+     1392          OUT (204),A
+     1394          LD A,"T"
+     1396          OUT (204),A
+     1398          LD A,"A"
+     1400          OUT (204),A
+     1402          OUT (205),A
+     1404          RET        
+               
+
+     En el caso de grabar, se debe hacer un OUT con un valor cualquiera al
+puerto 206. Los registros deben estar as¡: se indica el flag en A, la longitud
+en DE, y el inicio en IX. Estos registros entran en un Spectrum normal a
+partir de la direcci¢n 1222. Cuando se inserta un fichero para grabar, la ROM
+est  as¡:
+
+     Direcci¢n     Instrucci¢n 
+     1218          LD HL,1343
+     1221          PUSH HL
+
+     Y esto es lo que modifica el emulador:
+
+     Direcci¢n     Instrucci¢n
+     1222          PUSH AF
+     1223          LD A,255
+     1225          OUT (204),A
+     1227          LD A,"C"
+     1229          OUT (204),A
+     1231          LD A,"I"
+     1233          OUT (204),A
+     1235          LD A,"N"
+     1237          OUT (204),A
+     1239          LD A,"T"
+     1241          OUT (204),A
+     1243          LD A,"A"
+     1245          OUT (204),A
+     1247          POP AF
+     1248          OUT (206),A
+     1250          RET        
+               
+
+     4.4.8 Carga directa desde cinta de casette
+     ------------------------------------------
+
+     El emulador posee en el men£ una opci¢n para poder leer un programa desde
+cinta de casette y convertirlo a formato .TAP. Para poder realizar esto se debe
+tener una tarjeta Sound Blaster Pro compatible o superior. Adem s, hace falta
+un casette (naturalmente!) y un cable mono que se conecta al casette y a la
+entrada Line In de la Sound Blaster. Esta opci¢n no se puede realizar desde
+dentro de Windows, se debe realizar en sesi¢n MS-DOS. Tambi‚n es recomendable
+no tener en memoria programas de cach‚ de disco, como el SMARTDRV.
+     En el emulador se permite cambiar la velocidad de lectura de los datos,
+para poder leer datos turbo (a m s de 1500 baudios); sin embargo, hay
+tarjetas compatibles SB que no lo permiten. Si este es el caso, se pueden
+cambiar las constantes de la carga para poder leer turbo. Estas constantes
+estan explicadas en el apartado 5. Opciones del men£.
+
+     4.4.9 Ficheros Snapshot
+     -----------------------
+
+     Las primeras versiones del emulador trataban exclusivamente ficheros en
+formato SP, del emulador SPECTRUM de Pedro Gimeno. M s adelante, me invent‚ un
+formato llamado ZX, que est  derivado del formato SP pero que incluye muchas
+mejoras (la cabecera es del formato SP m s 256 bytes adicionales). S‚ que
+existe un emulador que tiene un formato de ficheros llamado tambi‚n ZX, pero
+no tiene nada que ver con el m¡o.
+     La versi¢n actual del emulador permite la carga de ficheros SP o ZX,
+pero la grabaci¢n se hace exclusivamente en formato ZX. La descripci¢n del
+formato SP est  sacada literalmente del fichero SPECTRUM.DOC del emulador de
+Pedro Gimeno:
+
+      Ficheros *.SP:
+
+Offset    Longitud    Descripci¢n
+------   ----------  -------------------
+  0       2 bytes    "SP" (53h, 50h) Signatura.
+  2       1 palabra  Longitud del programa en bytes (el emulador actualmente
+                     s¢lo genera programas de 49152 bytes)
+  4       1 palabra  Posici¢n inicial del programa (el emulador actualmente
+                     s¢lo genera programas que comiencen en la pos. 16384)
+  6       1 palabra  Registro BC del Z80
+  8       1 palabra  Registro DE del Z80
+ 10       1 palabra  Registro HL del Z80
+ 12       1 palabra  Registro AF del Z80
+ 14       1 palabra  Registro IX del Z80
+ 16       1 palabra  Registro IY del Z80
+ 18       1 palabra  Registro BC' del Z80
+ 20       1 palabra  Registro DE' del Z80
+ 22       1 palabra  Registro HL' del Z80
+ 24       1 palabra  Registro AF' del Z80
+ 26       1 byte     Registro R (de refresco) del Z80
+ 27       1 byte     Registro I (de interrupciones) del Z80
+ 28       1 palabra  Registro SP del Z80
+ 30       1 palabra  Registro PC del Z80
+ 32       1 palabra  Reservada para uso futuro, siempre 0
+ 34       1 byte     Color del borde al comenzar
+ 35       1 byte     Reservado para uso futuro, siempre 0
+ 36       1 palabra  Palabra de estado codificada por bits. Formato:
+
+                     Bit     Descripci¢n
+                     ---     -----------
+                     15-8    Reservados para uso futuro
+                     7-6     Reservados para uso interno, siempre 0
+                     5       Estado del Flash: 0 - tinta INK, papel PAPER
+                                               1 - tinta PAPER, papel INK
+                     4       Interrupci¢n pendiente de ejecutarse
+                     3       Reservado para uso futuro
+                     2       Biestable IFF2 (uso interno)
+                     1       Modo de interrupci¢n: 0=IM1; 1=IM2
+                     0       Biestable IFF1 (estado de interrupci¢n):
+                                 0 - Interrupciones desactivadas (DI)
+                                 1 - Interrupciones activadas (EI)
+
+El formato ZX tiene tres versiones, siendo la inicial la versi¢n 1 y la actual
+es la versi¢n 3.
+Los valores usados a partir de la versi¢n 2 est n indicados con (v. 2+).
+El £nico valor que incluye de m s la versi¢n 3 es el del ordenador emulado.
+La descripci¢n del formato ZX es: 
+signatura    "ZX"
+long_prog    WORD=49152
+pos_inicial  WORD=16384
+reg_c        BYTE
+reg_b        BYTE
+reg_e        BYTE
+reg_d        BYTE
+reg_l        BYTE
+reg_h        BYTE
+reg_f        BYTE
+reg_a        BYTE
+reg_ixl      BYTE
+reg_ixh      BYTE
+reg_iyl      BYTE
+reg_iyh      BYTE
+
+;Registros ' :
+
+reg_c_       BYTE
+reg_b_       BYTE
+reg_e_       BYTE
+reg_d_       BYTE
+reg_l_       BYTE
+reg_h_       BYTE
+reg_f_       BYTE
+reg_a_       BYTE
+;
+
+reg_r        BYTE
+reg_i        BYTE
+reg_sp       WORD
+reg_pc       WORD
+
+reservado1   WORD=0
+border       BYTE
+reservado2   BYTE=0 ;En la versi¢n 1 de la cabecera,esto
+                    ;era un word y reservado20 no existia.
+
+bits_estado  BYTE
+ 
+7-6     Reservados para uso interno, siempre 0
+5       Estado del Flash: 0 - tinta INK, papel PAPER
+                          1 - tinta PAPER, papel INK
+4       Interrupci¢n pendiente de ejecutarse
+3       Reservado para uso futuro
+2       Biestable IFF2 (uso interno)
+1       Modo de interrupci¢n: 0=IM1, 1=IM2
+0       Biestable IFF1 (estado de interrupci¢n):
+        0 - Interrupciones desactivadas (DI)
+        1 - Interrupciones activadas (EI)
+  En este emulador s¢lo se usan el bit 5(estado del flash), el bit 1
+  (si se est  en modo IM0 o IM1=0, modo IM2=1), y el bit 0 (DI o EI)
+  
+reservado20        BYTE=0 ;(v. 2+)
+
+version            BYTE=1 o 2  ;Versi¢n de la cabecera ZX
+reservado3         5 BYTES     ;No usados
+
+control_brillo     BYTE ;Valor del brillo
+disparador_defecto BYTE ;Frecuencia del disparador autom tico. Se calcula:
+                         frecuencia=50/disparador_defecto
+sonido             BYTE ;A 1 si est  activado el sonido (puerto 254)
+bits_estado0       BYTE ;El significado es el siguiente:
+
+Bit    Significado
+---    -----------
+7      Contiene el bit 6 del puerto del teclado (Issue 1 o 2)
+6      Indica si est  activado el disparador autom tico
+5      A 0 indica que el refresco de Flash est  activo, sino a 1
+4      A 1 indica que el programa a cargar es de 128k (v. 2+)
+3      A 1 indica que no es posible cambiar el color del borde mediante
+       OUT 254,valor (v. 2+)
+2      No usado
+1      A 1 indica que est  habilitado el protector de pantallas
+0      Paleta CGA (v. 2+)
+       ;0=Negro,Verde,Rojo,Amarillo
+       ;1=Cyan,Magenta,Blanco
+
+puerto_32765        BYTE  Valor del ultimo OUT al puerto 32765 (v. 2+)
+puerto_8189         BYTE  Valor del ultimo OUT al puerto 8189  (v. 2+)
+
+paginas_actuales    4 BYTES Contiene para cada segmento de memoria
+  (0000-3fffh,4000h-7fffh,8000h-bfffh,c000h-ffffh) la p gina (ROM o RAM)
+  asignada, siendo de 0 a 3 ROMS, y de 4 a 11 RAMS (v. 2+).
+  Si se emula un ordenador de 128k (pero no un +2A), la ROM1 se identifica
+  como ROM3.
+
+puerto_65533        BYTE Valor del ultimo OUT al puerto 65533 (v. 2+)
+
+ay_3_8912_registros 16 BYTES Contenido de los registros del chip de sonido
+
+ordenador_emulado   BYTE Ordenador que se emula: (v. 3+)
+0=Sinclair 16k
+1=Sinclair 48k
+2=Inves Spectrum+
+3=Sinclair 128k
+4=Amstrad +2
+5=Amstrad +2 - Frances
+6=Amstrad +2 - Espa¤ol
+7=Amstrad +2A (ROM v4.0)
+8=Amstrad +2A (ROM v4.1)
+9=Amstrad +2A - Espa¤ol
+
+
+reservado4          222 BYTES=255 Reservado para uso futuro
+DATOS               ? BYTES
+
+     A partir de aqu¡ se graban los datos de la memoria en s¡. Si el programa
+es de 48k, se graba desde la direcci¢n 16384 hasta la 65535; si es de 128k, se
+graba desde la RAM 0 hasta la RAM 7. El programa grabar  un fichero de 48k si
+se ejecuta el emulador en modo /48k, o si se est  en modo 48 BASIC; en caso
+contrario, se grabar n 128k.
+
+     Los datos estan comprimidos, de la manera siguiente:
+Si un byte se encuentra repetido m s de 4 veces, se graba como:
+221,221,byte a repetir,numero de veces
+Si justo antes de la repetici¢n hay un c¢digo 221, se graba como:
+221 de antes de la repetici¢n,byte a repetir,221,221,byte a repetir,numero de
+veces-1
+
+     Cuando se graban 128k, se hace en dos bloques de 64k, el primero se hace
+desde la RAM 0 hasta la RAM 3, y el segundo es desde la RAM 4 hasta la RAM 7,
+por lo que no se detectan repeticiones de bytes que acaben en la RAM 3 y sigan
+en la RAM 4, por ejemplo:
+
+     Si tenemos en memoria lo siguiente:
+RAM3
+16377=10
+16378=20
+16379=20
+16380=20
+16381=20
+16382=20
+16383=20
+RAM4
+0    =20
+1    =20
+2    =20
+3    =20
+4    =20
+5    =20
+6    =20
+7    =4
+
+Al grabarlo, el c¢digo generado ser  el siguiente:
+10, 221,221,20,6, 221,221,20,7, 4
+
+
+     4.4.10 Emulaci¢n del Inves Spectrum+
+     ------------------------------------
+
+     El Inves Spectrum+ fue un ordenador creado por Investr¢nica hacia el a¤o
+1988. Presenta algunos inconvenientes respecto a un Spectrum normal:
+     Posee una ROM similar a la ROM 1 del Spectrum 128k, pese a que s¢lo
+tiene 48k de RAM, de manera que tiene las rutinas de paginaci¢n de la
+direcci¢n 14446.
+     La actualizaci¢n de pantalla se realiza de manera distinta a la de un
+Spectrum normal, de manera que cuando se produce una interrupci¢n la ULA
+comienza a dibujar a la altura de la pantalla (o sea, la direcci¢n 16384) y
+no en la parte superior de borde, De este modo, en algunos juegos que
+utilizan ese tiempo del borde superior para borrar objetos, en el Inves se ve
+un parpadeo. Adem s. en muchas pantallas de juegos se pueden ver lineas
+"falsas" cuando coinciden determinados colores (todav¡a no se que combinaci¢n
+produce este efecto). Las temporizaciones del Inves no las s‚ seguro, aunque
+supongo que son las mismas que en un Spectrum.
+
+     La propiedad m s interesante del Inves Spectrum+ es los efectos
+producidos al POKEar en la ROM, s¡, en la ROM. Existen determinadas
+direcciones "privilegiadas" de la ROM en las que se puede alterar el
+funcionamiento normal del Inves; estas direcciones son las que el byte bajo
+de la direcci¢n es 254 (XXFEh), como el puerto del sonido.
+     Pokeando en todas estas direcciones de la ROM (254,511,,...,16383) con
+un mismo valor, lo que se crea es una m scara AND que se aplicar  en el
+valor enviado al puerto 254, y ese ser  el valor real enviado. Debemos asumir
+que el POKE en la ROM al enchufar el ordenador (y no al hacer un RESET) es
+255. De esta manera, se producen dos efectos:
+     El primero es que los tres bits inferiores constituyen una m scara a la
+hora de cambiar el borde con un OUT 254, es decir, al valor enviado al puerto
+254 se le hace un AND con el valor que se POKEa la ROM, y ese ser  el color
+del borde: por ejemplo: con un POKE en la ROM con 6, tendremos Borde de color
+par, es decir, el borde 0 y 1 ser  el 0, el 2 y 3 ser  2, etc. Por otra
+parte, si POKEamos con 0, todos los bordes que pongamos seran negros (0).
+     El segundo efecto (y el peor en muchos juegos con m£sica) es el sonido.
+Intentar‚ explicarlo de manera sencilla, aunque es un poco complicado. A los
+bits 3 y 4 del valor que se env¡a al puerto 254 se le hace un AND con el
+valor del POKE a la ROM. Entonces, se hace un XOR de los bits 3 y 4
+resultantes, de manera que obtenemos 1 bit de resultado. Entonces, este bit
+ser  el enviado al altavoz, de manera que si se envia un bit igual al
+anterior, el altavoz no se conmuta y no hay sonido. Hay que recordar que en
+un Spectrum normal, cualquier valor de los bits 3 y 4 que sean diferentes a
+los anteriores producen sonido.
+     De esta manera, tenemos las siguientes combinaciones: (S significa que
+hay sonido, N significa que no)
+
+
+                         Bits 4 y 3 POKE a ROM
+                         ----------------------------
+                         |      |      |      |     |
+Bits 4 y 3 puerto 254    |      |      |      |     |
+(primer y segundo valor  |  11  |  10  |  01  |  00 |
+enviados)                |      |      |      |     |
+-----------------------------------------------------    
+00                       |  S   |  N   |  S   |  N  |
+01                       |      |      |      |     |
+-----------------------------------------------------
+00                       |  S   |  S   |  N   |  N  |
+10                       |      |      |      |     |
+-----------------------------------------------------
+00                       |  N   |  S   |  S   |  N  |
+11                       |      |      |      |     |
+-----------------------------------------------------
+01                       |  N   |  S   |  S   |  N  |
+10                       |      |      |      |     |
+-----------------------------------------------------
+01                       |  S   |  S   |  N   |  N  |
+11                       |      |      |      |     |
+-----------------------------------------------------
+10                       |  S   |  N   |  S   |  N  |
+11                       |      |      |      |     |
+-----------------------------------------------------
+
+     En un Spectrum normal, cualquier combinaci¢n de estos bits 4 y 3 en el
+puerto 254 producir  sonido; en un Inves (y en el emulador) ‚sto no es as¡.
+En un Inves real, se deben POKEar todas las direcciones de la ROM con el byte
+bajo de la direcci¢n que valga 254 (XXFEH); si no se POKEan todas con el
+mismo valor, los efectos producidos ser n una combinaci¢n de todos (hay una
+determinada combinaci¢n el la cual al hacer un BEEP, se producen franjas
+negras en el borde!). En el emulador, basta con POKEar una s¢la de estas
+direcciones para que se tenga el byte de POKEo (tambi‚n se puede hacer desde
+el men£).
+     Esta caracter¡stica del sonido en el Inves produce que en muchos juegos
+no se escuche la m£sica, o s¢lo un peque¤o chasquido en m£sicas a dos canales
+(todos los juegos de Code Masters, el Lemmings,....). Tambi‚n, el sonido se
+alterar  si hacemos POKE 23659,0 desde el BASIC. Como se ve en el cuadro, no
+hay ni un valor para la ROM en que se comporte de manera igual que un
+Spectrum.
+
+     4.4.11 El puerto "bus idle"
+     ---------------------------
+
+     Recibe el nombre de "bus idle" cualquier puerto del Spectrum que no
+tenga dispositivo asignado. Un puerto as¡, debe devolver el valor que lee la
+ULA desde la pantalla, es decir, cuando la ULA est  dibujando la pantalla lee
+bytes correspondientes a los pixeles y a los atributos. Este byte leido por
+la ULA puede saberse haciendo IN en cualquier puerto que no tenga asignado
+dispositivo (t¡picamente el 255). Cuando la ULA no lee bytes de pantalla (al
+dibujar el border o en los sincronismos) se devuelve el valor 255. Esto
+funciona as¡ en los Spectrum 16k, 48k, y 128k (y +2). En cambio, en un Inves
+Spectrum+ siempre leeremos un 255.
+     En un Spectrum +2A, la cosa se complica un poco:
+     Cuando la paginaci¢n est  bloqueada (bit 5 del puerto 32765 puesto a 1),
+siempre leeremos 255; cuando no lo est , leeremos el byte que lee la ULA (con
+el bit 0 alzado) y siempre que el numero del puerto corresponda a la
+siguiente m scara: 0000XXXXXXXXXX01b, es decir, empezando por el puerto 1 y
+con incrementos de 4 en 4, hasta el puerto 4093 (1,5,9,13,..., 4093). Esta
+caracter¡stica la he descubierto haciendo pruebas con mi +2A, pues en toda la
+documentaci¢n que hay en distintos emuladores y en p ginas Web, se dice que
+el +2A siempre devuelve 255. Posiblemente el fallo est‚ en que se lea s¢lo el
+puerto n£mero 255, el cual s¡ devuelve 255.
+
+     Esta caracter¡stica del "bus idle" se usa en algunos juegos, como el
+Arkanoid o el Renegade. Desde la versi¢n 3.0 del emulador est  soportada,
+funcionando de manera bastante real.
+
+
+     5    Opciones del men£
+     -----------------------
+
+     Para elegir una opci¢n del men£ hay usar los cursores y las teclas
+Enter, + y -. En el caso de opciones con valores num‚ricos, se debe
+pulsar + para incrementar el valor, y la tecla - para decrementar el valor.
+Hay determinadas opciones que no se pueden seleccionar, en cuyo caso el
+cursor normal ( -> ) se convertir  en ( -x ). 
+     En las opciones de cargar y grabar, insertar y extraer podemos
+seleccionar el fichero pulsando Enter y luego usar los cursores, Re Pag, Av
+Pag. Si queremos escribir el nombre del fichero, debemos seleccionar la
+opci¢n con la tecla -.
+
+     5.1   Cargar Snapshot
+     ---------------------
+
+     Con esta opci¢n podremos cargar un fichero snapshot de tipo ZX o SP; el
+tipo de fichero lo detecta de su cabecera, no de la extensi¢n, p.ej: es
+posible tener un fichero con extensi¢n .TXT y que sea de tipo ZX. Al cargar
+un fichero SP, las opciones de brillo, disparador, etc. se conservan, es
+decir, ser n las que habian antes de cargar el fichero SP.
+
+     5.2   Grabar Snapshot
+     ---------------------
+
+     Con esta opci¢n podremos crear un fichero snapshot de tipo ZX; se debe
+especificar el nombre y su extensi¢n. Si el fichero ya existe, se preguntar 
+si se quiere sobreescribir.
+
+     5.3   Seleccion de Ordenador
+     ----------------------------
+
+     Con esta opci¢n podremos elegir el ordenador a emular. Al seleccionarlo,
+se hace un RESET, se pone la velocidad relativa a 100% y se extraen las cintas.
+
+     5.4   Opciones de Pantalla
+     --------------------------
+
+     5.4.1 Cargar Pantalla
+     ---------------------
+
+     Con esta opci¢n cargaremos un fichero .SCR en la direcci¢n 16384.
+
+     5.4.2 Grabar Pantalla
+     ---------------------
+
+     Con esta opci¢n grabaremos el contenido de las direcciones 16384-23295
+en un fichero .SCR (se debe especificar la extensi¢n).
+
+     5.4.3 Control de Brillo
+     -----------------------
+
+     Con esta opci¢n podremos aumentar o disminuir el brillo de los colores;
+los colores del men£ no var¡an.
+
+     5.4.4 Protector de Pantalla
+     ---------------------------
+
+     Con esta opci¢n podremos activar o desactivar la aparici¢n del protector
+de pantalla; a veces conviene desactivarlo cuando estamos escuchando la m£sica
+de un juego.
+
+     5.4.5 Actualizaci¢n de Pantalla
+     -------------------------------
+
+     Con esta opci¢n podremos cambiar el modo de actualizaci¢n de pantalla:
+alto o bajo.
+
+     5.4.6 Frameskip
+     ---------------
+
+     Esta opci¢n es para cambiar el "frameskip" de pantalla, que indica el
+n£mero de im genes por segundo (FPS), equivalente a (50/frameskip). Por
+ejemplo, un valor de 2 nos dar  50/2=25 im genes por segundo.
+
+
+     5.5   Men£ Depuraci¢n
+     ---------------------
+     
+     5.5.1 Generar RESET
+     -------------------
+
+     Con esta opci¢n generaremos un RESET del Spectrum.
+
+     5.5.2 Generar NMI
+     -----------------
+
+     Con esta opci¢n provocaremos una interrupci¢n No Enmascarable (llamar a la
+direcci¢n 66H).
+
+     5.5.3 Ver Registros
+     -------------------
+
+     Con esta opci¢n podremos ver los registros de la CPU. Tambi‚n se permite
+activar y desactivar las interrupciones, y tambi‚n cambiar el modo de
+interrupciones.
+     Tambi‚n podremos ver las p ginas activas, la pantalla en uso (5 o 7) y
+si la paginaci¢n est  activa (en 128k). Tambi‚n se puede ver el valor del
+puerto 254 (color del borde, bits 4 y 3).
+
+
+     5.5.4 Pokear
+     ------------
+
+     Se usa para modificar direcciones de memoria, £til para conseguir vidas
+infinitas en los juegos. Se muestra el valor anterior de la direcci¢n a
+modificar.
+
+
+     5.6   Emulaci¢n de Cinta
+     ------------------------
+
+     5.6.1 Insertar/Extraer fichero de Entrada
+     -----------------------------------------
+
+     Con esta opci¢n indicaremos al emulador que debe usar el fichero
+especificado (de formato TAP) como cinta de entrada (si se selecciona
+insertar), o que el fichero ya no se usa como entrada (si se selecciona
+extraer). En cualquiera de las dos opciones, las direcciones de la ROM (a
+partir de la 1378) se modifican adecuadamente. Si el fichero no existe, se
+preguntar  si deseamos crearlo.
+
+     5.6.2 Fichero
+     -------------
+
+     Con esta opci¢n indicamos el fichero que queremos usar como entrada de
+cinta (de formato TAP). Para que el emulador lo use, debemos tambi‚n 
+insertarlo.
+
+     5.6.3 Insertar/Extraer fichero de Salida
+     ----------------------------------------
+
+     Con esta opci¢n indicaremos al emulador que debe usar el fichero
+especificado (de formato TAP) como cinta de salida (si se selecciona
+insertar), o que el fichero ya no se usa como salida (si se selecciona
+extraer). En cualquiera de las dos opciones, las direcciones de la ROM (a
+partir de la 1221) se modifican adecuadamente. Si el fichero no existe, se
+preguntar  si deseamos crearlo.
+
+     5.6.4 Fichero
+     -------------
+
+     Con esta opci¢n indicamos el fichero que queremos usar como salida de
+cinta (de formato TAP). Para que el emulador lo use, debemos tambi‚n 
+insertarlo.
+
+     5.6.5 Cargar cualquier flag
+     ---------------------------
+
+     Aqu¡ indicamos si la rutina de carga permite cargar datos indistintamente
+de su flag (Z' alzado), o si no se permite (Z' siempre a 0).
+
+     5.6.6   Cargar desde casette
+     ----------------------------
+
+     Es el men£ para cargar programas desde cinta real de Spectrum. Se debe
+tener una tarjeta compatible Sound Blaster para que la opci¢n est‚ activa.
+Adem s, no se debe ejecutar desde dentro de Windows (que raro!), si se hace no
+se leer  nada.
+
+     5.6.6.1 Baudios
+     ---------------
+
+     Indica la velocidad a la que se cargan los datos. Se hace cambiando la
+frecuencia de lectura de la tarjeta de sonido. En mi tarjeta de sonido no
+ocurre nada si se toca la velocidad, pues siempre lee a 11KHz. Tambi‚n se puede
+cargar a distintas velocidades cambiando los par metros de longitud onda
+ceros y unos.
+
+     5.6.6.2 Longitud onda guia
+     --------------------------
+
+     Indica cu nto dura una onda del tono gu¡a; la duraci¢n (en segundos) de
+este valor representa: segundos=longitud onda gu¡a/frecuencia. Normalmente, en
+las cargas turbo, el tono gu¡a no cambia.
+
+     5.6.6.3 Longitud tono guia
+     --------------------------
+
+     Indica cu ntas ondas de tono gu¡a se deben encontrar seguidas para que el
+emulador sepa que eso es el tono gu¡a. Al cargar, cuando se sobrepasa ese
+valor, en pantalla aparece "Leyendo tono guia...".
+
+     5.6.6.4 Longitud onda ceros
+     ---------------------------
+
+     Indica cu nto dura la onda de un bit que sea cero, con margen de error de
++-2. La duraci¢n se calcula igual que para el tono gu¡a. Se debe modificar s¢lo
+si la tarjeta de sonido no permite cambiar la frecuencia: si hay que cargar un
+programa turbo a 3000 baudios, el valor de ceros y el de unos deben ser la
+mitad.
+
+     5.6.6.5 Longitud onda unos
+     --------------------------
+
+     Indica cu nto dura la onda de un bit que sea uno, con margen de error de
++-2. La duraci¢n se calcula igual que para el tono gu¡a.
+
+     5.6.6.6 Filtro de Entrada
+     -------------------------
+
+     Indica el filtro que aplica la tarjeta de sonido a la lectura de datos.
+Seg£n he leido, el filtro s¢lo esta disponible en tarjetas Sound Blaster Pro,
+y no en las Sound Blaster superiores.
+
+     5.6.6.7 Volumen canal izq.
+     --------------------------
+
+     Indica el vol£men de entrada del canal izquierdo.
+
+     5.6.6.8 Volumen canal der.
+     --------------------------
+
+     Indica el vol£men de entrada del canal derecho.
+
+     5.6.6.9 Ver Franjas del Borde
+     -----------------------------
+
+     Con esta opci¢n puedes ver el borde mientras se carga; no es exactamente
+como el borde en un Spectrum real.
+
+     5.6.6.10 Autocorrecci¢n de Checksum
+     ------------------------------------
+
+     Dice al emulador si el byte final de carga (checksum) se debe ajustar
+cuando hay error de carga.
+
+    
+     5.6.6.11 Comenzar a Cargar
+     --------------------------
+
+     Esta es la opci¢n que yo considero m s importante de todo el emulador, que
+permite cargar programas. Antes que nada, hay que tener un fichero .TAP
+insertado en salida.
+     Hay que tener en cuenta que no se puede cargar desde ventana de Windows
+(se debe hacer en sesi¢n MS-DOS), y es recomendable que no haya en memoria
+ning£n cach‚ de disco (como el SMARTDRV).
+     Cuando seleccionamos esta opci¢n, aparece en la mitad de la pantalla un
+indicador del volumen. Este indicador no importa que vol£men indique, pues
+tanto se puede cargar a un volumen alto como a un volumen bajo, simplemente
+es una aviso de que se lee sonido. A£n as¡, por los altavoces de la Sound
+Blaster podremos oir el sonido. Tambi‚n puedes ver las franjas del borde
+mientras carga; es similar a un Spectrum real.
+     Para poder cargar correctamente, el sonido se debe oir lo m s agudo
+posible (ajustando el tornillo o "azimut" del casette si hace falta) y a un
+volumen que no distorsione, al igual que en un Spectrum normal.
+
+     Debajo del volumen hay una franja que indica los bytes que se est n
+cargando, incluyendo el flag. Respecto a estos datos, puede ser que la
+visualizaci¢n se vaya parando cada 1.5 segundos. Esto pasa cuando se ejecuta el
+emulador con alg£n emulador de EMS, como el EMM386. La raz¢n de esta pausa
+reside en que la lectura directa (DMA) no se hace byte a byte, sino que se lee
+primero todo el buffer (de 16k) y luego se traslada a la memoria del emulador.
+No pasa nada, pues la lectura no se detiene, sino que primero pasa por el
+buffer intermedio.
+     En cambio, si ejecutamos el emulador en modo MS-DOS sin EMS, la 
+visualizaci¢n es continua.
+
+     Cuando se ha leido un bloque, se escribe la cabecera, si es de 17 bytes y
+tiene flag 0, y si no, se escribe el flag y la longitud (esa longitud muestra
+tambi‚n el byte de checksum y el flag). Tambi‚n indica si ha habido error de 
+carga.
+     Entonces, podemos grabar el bloque pulsando la tecla G. Si ha habido error
+de carga y no hay autocorrecci¢n de checksum, cuando luego ejecutemos LOAD ""
+dar  error de carga desde el BASIC.
+
+
+     5.7   Ajustes de Hardware
+     -------------------------
+
+     5.7.1 Teclado Issue0/1
+     ----------------------
+
+     Permite elegir entre los dos tipos de teclado del Spectrum.
+
+     5.7.2 Disparador Autom tico
+     ---------------------------
+
+     Permite activar o desactivar el disparador autom tico del joystick
+kempston.
+
+     5.7.3 Frec. disparador
+     ----------------------
+
+     Permite cambiar la frecuencia del disparador autom tico. Esta frecuencia
+indica cuantas veces por segundo se invierte el bit 4 del puerto kempston.
+
+     5.7.4 Valor POKE a ROM
+     ----------------------
+
+     Permite cambiar el valor de POKE a la ROM (s¢lo en modo Inves).
+
+     5.7.5 Memoria compartida
+     ------------------------
+
+     Permite activar la pseudo-emulaci¢n de la memoria compartida. Esta se
+basa en que las instrucciones que se ejecuten en una RAM lenta tardan un 15%
+m s en ejecutarse. En algunos juegos es bastante real, pero recomiendo
+desactivarla para las demos.
+
+
+     5.8   Control de sonido
+     -----------------------
+
+     5.8.1 Salida Altavoz
+     --------------------
+
+     Indica hacia donde se dirige la salida del bit 4 del puerto 254: al
+altavoz interno del PC (PC Speaker), a la Sound Blaster, o a ning£n
+dispositivo (Nada), en cuyo caso no se oye nada.
+
+     5.8.2 Modo Salida a SBlaster
+     ----------------------------
+
+     Indica el modo de salida del sonido (del puerto 254) a la Sound Blaster:
+modo directo o por interrupciones.
+
+     5.8.3 Frec. Salida Sonido
+     -------------------------
+
+     Muestra la frecuencia de salida del sonido en modo por interrupciones.
+
+     5.8.4 Chip AY presente
+     ----------------------
+
+     Indica si el chip de sonido existe o no. Puede estar presente el chip pero
+en cambio no tener tarjeta Sound Blaster; de esta manera los puertos del chip
+son manipulables pero no se oye nada.
+
+
+     5.8.5 Salida Chip AY
+     --------------------
+
+     Indica hacia donde se dirige la salida del chip de sonido: a la Sound
+Blaster, o a ning£n dispositivo (Nada). En un futuro, se podr  dirigir al PC
+Speaker.
+
+     5.8.6 Modo de Stereo
+     --------------------
+
+     Indica el modo de Stereo usado para el chip AY: ACB,ABC o Mono.
+
+     5.8.7 Emulacion de Ruido
+     ------------------------
+
+     Permite desactivar la emulaci¢n de canales de ruido.
+
+
+     5.8.8 Refresco Chip AY
+     ----------------------
+
+     Indica si est  activo el refresco del sonido. En la mayor parte de los
+casos, debe estar activo.
+
+     5.8.9 Ver Registros Chip AY
+     ---------------------------
+
+     Con esta opci¢n podremos ver los 16 registros internos del chip de sonido
+(siempre que ‚ste exista).
+
+
+     5.9   Selecci¢n de Idioma
+     -------------------------
+
+     Con esta opci¢n podremos cambiar el idioma del men£ (Espa¤ol o Ingl‚s).
+
+     5.10  Pausa
+     -----------
+
+     Con esta opci¢n indicamos si queremos que mientras est  el men£ activo,
+la emulaci¢n del Z80 tambi‚n est‚ activa.
+
+     5.11  Velocidad CPU
+     -------------------
+
+     Desde aqu¡ podremos cambiar la velocidad relativa del Z80.
+
+     5.12  Volver al Emulador
+     ------------------------
+
+     Como su nombre indica, volveremos a la emulaci¢n del Spectrum.
+
+     5.13  Salir del Emulador
+     ------------------------
+
+     Como tambi‚n indica su nombre, saldremos del emulador.
+
+
+
+     6     Utilidades incluidas
+     --------------------------
+
+     6.1   LINEASMP.EXE
+     ------------------
+
+     Este programa sirve para leer sonido a trav‚s de la entrada LINE IN de
+la Sound Blaster y grabarlo como fichero SMP. Este fichero SMP se puede
+editar con el programa Fast Tracker, para poder modificar el sonido en caso
+de haber error de carga con algun programa del Spectrum.
+
+     Como adivinar s, no funciona desde dentro de Windows, y tampoco va bien
+con el SMARTDRV en memoria.
+
+     Al ejecutarlo, se detectar  la presencia de Sound Blaster, y a
+continuaci¢n podremos especificar la velocidad de carga (en baudios). Despu‚s
+deberemos introducir el fichero SMP a generar, indicando tambi‚n extensi¢n.
+Cuando deseemos terminar de leer el sonido, deberemos pulsar una tecla.
+
+     El fichero SMP generado est  grabado en mono, a 8 bits, y a 11KHz (si es
+una carga turbo, se debe especificar los baudios y el programa lo graba como
+si fueran 1500 baudios).
+
+     6.2   SMPATAP.EXE
+     -----------------
+
+     Este programa sirve para leer datos de un fichero de sonido SMP y
+grabarlo como formato TAP. Con este programa doy la posibilidad de poder
+cargar programas desde ordenadores que no tengan Sound Blaster.
+
+     Al ejecutar el programa, se debe especificar el fichero SMP y luego el
+TAP (ambos con extensi¢n). Cuando empieza a cargar, se debe pulsar cualquier
+tecla excepto la N para grabar el bloque.
+
+     El fichero SMP lo puedes generar a partir de un fichero WAV y el programa
+Fast Tracker, o directamente leerlo desde el Fast Tracker o desde el
+LINEASMP.EXE. Debe ser en mono, a 8 bits y a 11KHz.
+
+     6.3   TAPABIN.EXE
+     -----------------
+
+     Este programa sirve para sacar bloques de datos de un fichero TAP y
+grabarlo como formato BIN.      
+     Al ejecutar el programa, se debe especificar el fichero TAP y luego el
+BIN (ambos con extensi¢n). Cuando lea un bloque, se debe pulsar cualquier
+tecla excepto la N para grabar el bloque. El fichero que se graba es el que
+se obtiene de eliminar el flag y el checksum de un bloque; por ejemplo: si
+queremos grabar una pantalla del Spectrum en formato BIN, al ejecutar
+TAPABIN, debemos grabar el bloque que indique: "Flag:255 Longitud:6912" y no
+el que diga: "Bytes:Pantalla  Longitud:6912 Inicio:16384", por que si no,
+grabaria la cabecera, o sea, los 17 bytes.
+
+     6.4   SP_Z80.EXE
+     ----------------
+
+     Este programa sirve para convertir ficheros entre los formatos SP y Z80.
+Al ejecutarlo, se nos pedir  el fichero origen y el destino, debiendo incluir
+las extensiones (siempre .SP o .Z80). S¢lo permite hacer conversiones de
+ficheros de 48k.
+
+
+     7     Utilidades en formato cinta (TAP)
+     ---------------------------------------
+
+     7.1   SPED52.TAP
+     ----------------
+
+     Esta cinta contiene un ensamblador/desensamblador para ZX Spectrum 128k,
+junto con su c¢digo fuente. Este ensamblador (SPED) aprovecha al m ximo los
+128k de memoria. El SPED se aloja en la RAM1, el c¢digo objeto en la RAM 4,
+el c¢digo fuente usa las RAM "48" (5,2,0) y las RAMs 6 y 7, lo que nos da un
+c¢digo fuente m ximo de 74549 bytes (41781+16384+16384).
+     Las sentencias ORG y ENT tienen un significado ligeramente distinto al
+de otros Ensambladores. A diferencia del GENS, aqu¡ el ORG siempre indica en
+qu‚ direcci¢n de memoria se va a generar el c¢digo objeto; lo normal es
+ensamblar en la 49152, que corresponde a la RAM 4. El ENT indica en qu‚
+direcci¢n de memoria van referidas las etiquetas (en un programa reubicable,
+el ENT debe ser normalmente 0). 
+     Tambi‚n, el operador $ siempre indica en que direcci¢n de memoria est 
+referida la l¡nea donde est‚ situado (indicado con ENT). Y el operador !, que
+me he inventado, indica donde se est  generando el c¢digo objeto (indicado
+con ORG).
+     Para que aparezca el listado mientras se ensambla se debe indicar en el
+c¢digo fuente la orden LST+, y para que no aparezca, LST- .
+
+     El ensamblador puede generar informaci¢n de depuraci¢n, que consiste en
+tener una tabla que contiene cada direcci¢n de memoria del c¢digo objeto
+junto con su n£mero de l¡nea del c¢digo fuente. Para esta tabla usa la RAM 7;
+de esto se deduce que si se usa el tercer bloque de texto no se podr  generar
+informaci¢n de depuraci¢n. El tama¤o m ximo de la tabla es de 16k (4096
+lineas). Para decir al ensamblador que cree la informaci¢n, se debe incluir
+en el c¢digo fuente la orden DPR+ (y para desactivarla, DPR-).
+     Al ir al desensamblador, si hay tabla de depuraci¢n, se mostrar  la
+l¡nea del c¢digo fuente.
+     La tabla de etiquetas usa la RAM 3, lo que nos da un m ximo de 16k para
+etiquetas (esto supone unas 1260 etiquetas como m ximo).
+     El editor tambi‚n utiliza la RAM 3, para copiar texto en un buffer y
+poder hacer las acciones t¡picas de copiar/pegar/mover; el m ximo debe ser
+16k de texto. 
+     Debo decir que si no tienes memoria EMS, al ensamblar puedes estar
+muchiiiisimo tiempo esperando; lo mejor es salir al MS-DOS con la EMS activa.
+
+     No me quiero extender sobre las opciones del programa, pues posee ayuda
+propia (en el entorno principal y el desensamblador, tecla H; en el editor,
+Modo Extendido y H). Adem s, tienes el c¢digo fuente para poder verlo
+enterito.
+
+     S¢lo una cosa m s, el formato SPED. El ensamblador s¢lo entiende c¢digos
+fuente con cabeceras en formato SPED, que son de 34 bytes pero que tienen la
+ventaja de que se pueden leer desde el BASIC. La descripci¢n de la cabecera
+es:
+
+     Offset Longitud Descripci¢n
+     ------ -------- -----------
+
+       0       1     Byte que est  a 3. Indica bloque de BYTES
+       1      10     Nombre del fichero
+      11       2     Word que indica la longitud del primer bloque de texto
+      13       4     4 Bytes no usados
+      17       1     Byte de Checksum. Se utiliza para "enga¤ar" al BASIC y
+                     decirle que la cabecera es de 17 bytes; se puede leer la
+                     cabecera en un Spectrum real y en el emulador
+      18       1     Dia de grabaci¢n del c¢digo fuente
+      19       1     Mes de grabaci¢n del c¢digo fuente
+      20       1     A¤o-1980 de grabaci¢n del c¢digo fuente. Est  preparado
+                     para el efecto 2000!
+      22       2     Word que indica la longitud del segundo bloque de texto.
+                     Si no lo hay, a 0
+      24       2     Word que indica la longitud del tercer bloque de texto.
+                     Si no lo hay, a 0
+      26       9     9 Bytes a 255, usados en futuras versiones
+
+     Despu‚s de la cabecera viene el texto, formado por 1, 2 o 3 bloques con
+flag 255.
+
+     Los bloques de texto se graban en formato ASCII, poniendo en bit 7 de un
+car cter a 1 cuando queremos indicar el tabulador, y el c¢digo 13 para saltos
+de l¡nea. De los ensambladores que tengo para Spectrum (SPED, GENS, TED), ‚ste
+es el que utiliza un formato de texto m s corto.
+
+     7.2   CONVERSO.TAP
+     ------------------
+
+     Este programa es un conversor de codigos fuente de formatos GENS, TED y
+SPED. Las conversiones posibles son: GEN-> TED, GEN->SPED, TED->SPED.
+     Se incluye su c¢digo fuente en formato SPED. Nota: El TED es un formato
+de un editor/ensamblador que apareci¢ en la revista MICROHOBBY, de Hobby Press.
+
+     7.3   REALDEBU.TAP
+     ------------------
+
+     Consiste en dos desensambladores, uno para 48k y otro para 128k. La
+apariencia que tienen es parecida al MONS. Se incluye los c¢digos fuentes de
+ambos, en formato SPED. El nombre de ambos es (R)EAL DEBUG, y es debido a que
+controlan perfectamente el registro R, cosa que otros desensambladores, como
+el MONS, no hacen.
+
+     El de 48k es totalmente reubicable. Para poderlo cargar hacer:
+     CLEAR direccion-1: LOAD "RDEBUG6.CO" CODE direccion: 
+     RANDOMIZE USR direccion
+
+     Para obtener las teclas del de 48k puedes verlas del de 128k, pues tiene
+ayuda; s¢lo hay dos opciones no disponibles, la de selecci¢n de RAM y la de
+ensamblar.
+     
+     El de 128k se ubica en la RAM 1, m s un bloque de 256 bytes que debe
+estar por debajo de la 49152. Para cargarlo hacer:
+
+     Desde el 128 BASIC: RANDOMIZE USR 0. Con esto, iremos a la ROM3. Luego:
+
+     CLEAR 29999: OUT 32765,17: LOAD "R37DE128.C" CODE 49152: RANDOMIZE
+     direccion: RANDOMIZE USR 49152
+
+     El CLEAR es arbitrario, aunque debe estar por debajo de 49152. La
+variable indicada como "direccion" es la que indica la posici¢n de memoria
+donde se ubican los 256 bytes; se puede poner, por ejemplo, en la 23296. Si
+se pone en otra que no sea la 23296, el CLEAR debe estar por debajo de
+"direccion".
+
+
+     7.4   CURSORDR.TAP
+     ------------------
+
+     Se trata de un programa de dibujo, el CURSOR DRAW, que incluye tambi‚n su
+c¢digo fuente en SPED.
+
+
+
+------------------------------------------------------------------------------
+
+
+Y esto es todo por mi parte. Espero que disfrutes del emulador.  :-)
+
+CESAR HERNANDEZ BA¥O
+chernandezba@campus.uoc.es

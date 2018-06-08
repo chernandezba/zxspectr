@@ -1,0 +1,45 @@
+CC32=gcc -m32
+CC64=gcc -m64
+
+CFLAGS=
+
+PROGS32=smpatap_x32 sp_z80_x32 tapabin_x32 vga2raw_x32
+PROGS64=smpatap_x64 sp_z80_x64 tapabin_x64 vga2raw_x64
+
+all: $(PROGS32) $(PROGS64)
+
+all32: $(PROGS32)
+
+all64: $(PROGS64)
+
+smpatap_x32: smpatap_unix.c
+	$(CC32) $(CFLAGS) smpatap_unix.c -o smpatap_x32
+
+smpatap_x64: smpatap_unix.c
+	$(CC64) $(CFLAGS) smpatap_unix.c -o smpatap_x64
+
+
+sp_z80_x32: sp_z80_unix.c
+	$(CC32) $(CFLAGS) sp_z80_unix.c -o sp_z80_x32
+
+sp_z80_x64: sp_z80_unix.c
+	$(CC64) $(CFLAGS) sp_z80_unix.c -o sp_z80_x64
+
+
+tapabin_x32: tapabin_unix.c
+	$(CC32) $(CFLAGS) tapabin_unix.c -o tapabin_x32
+
+tapabin_x64: tapabin_unix.c
+	$(CC64) $(CFLAGS) tapabin_unix.c -o tapabin_x64
+
+
+vga2raw_x32: vga2raw_unix.c
+	$(CC32) $(CFLAGS) vga2raw_unix.c -o vga2raw_x32
+
+vga2raw_x64: vga2raw_unix.c
+	$(CC64) $(CFLAGS) vga2raw_unix.c -o vga2raw_x64
+
+
+
+clean:
+	rm -f smpatap_x32 smpatap_x64 sp_z80_x32 sp_z80_x64 tapabin_x32 tapabin_x64 vga2raw_x32 vga2raw_x64

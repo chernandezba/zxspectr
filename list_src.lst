@@ -1,0 +1,15 @@
+COPYING
+*.asm
+*.c
+*.inc
+*.mac
+*.bat
+*.sh
+list_bin.lst
+list_src.lst
+*.rom
+*.txt
+*.odt
+zxspectr.scr
+keyboard.scr
+Makefile.utils

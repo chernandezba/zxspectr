@@ -1,0 +1,206 @@
+Versión 3.5. 15 Septiembre 2013
+. Nuevo: Emulación de Spectrum 128k Español
+. Corregido presentación estado paginación en depuracion
+. Corregido fallo en documentacion: ejemplo cabecera archivo tap
+. Algunos otros cambios menores en la documentación
+. Añadida pantalla de ayuda
+. Cambio de cursor de menu en opciones de selección de archivos
+. Cambiado nombre de este archivo
+. Añadido archivo de pantalla con distribución del teclado
+. Cambiado comportamiento de la tecla PgDn en la selección de archivos
+. Utilidades SMPATAP, TAPABIN, SP_Z80 también para Linux
+. Corregido fallo al cargar archivos .SP. No funcionaba desde hacia mucho tiempo
+. Añadido emulacion de cursores de spectrum mediante cursores spectrum. Se puede alternar entre emulacion kempston o cursores
+  Ahora por defecto las teclas cursores emulan los cursores de spectrum
+
+
+Versión 3.4. 1 Diciembre 2008
+. Nuevo: Emulación de teclas extendidas
+. Eliminación emulación de pc speaker. Este modo no puede funcionar desde los cambios en Versión 3.1.
+. Ordenación de archivos en listados. Corregido bug al llegar al limite de archivos
+. Nuevo: Grabación de sonido en archivos .raw
+. Nuevo: Grabación de video en archivos .vga
+. Mejorada gestion de errores
+. Corrección de nombres de menus
+. Cambio rutinas emulación carga/grabacion. Eliminación puertos propios 204, 205 y 206
+. Corregido fallo al insertar archivos y apagando el motor del floppy
+
+Versión 3.3. 16 Septiembre 2008
+. Corrección rutina update pantalla para sistemas lentos. Al menos 1 FPS. Util para ordenadores lentos o emuladores de MS-DOS.
+
+Versión 3.2. 25 Septiembre 2006
+. Corregido bug al cargar desde cinta de casete sin sonido en la entrada
+. Cambio en el formato de la documentación. Ahora está en formato OpenOffice y PDF
+. Cambio rutinas sincronismo. Métodos sincronización por Timer o SoundBlaster
+. Nuevo: Emulación de Ruido
+. Nuevo: AutoFrameSkip de Pantalla
+. Versión mejorada para entornos Windows 2000/XP
+
+Versión 3.1 Beta 4. 22 Marzo 2003
+. Arreglado fallo al insertar cintas
+. Añadida emulación (experimental) del chip AY. Falta emulación de ruido,
+  envolventes
+. Añadidas 3 demos a la distribucion: THECUBE, NOUMENON, POWER_UP
+
+Versión 3.1 Beta 3. 13 Marzo 2003
+. Arreglado fallo con la actualización de pantalla en Inves
+
+Versión 3.1 Beta 2
+. Añadido efecto rainbowing (otra vez!)
+. Corregido fallo de presentación al mostrar los registros en modo 48k
+. Ahora, el idioma por defecto es el inglés
+. Añadido el Dynamite Dan 2 a la distribución
+
+Versión 3.1 Beta 1. 1 Marzo 2003
+. Versión mejorada para que funcione desde windows. Ahora el rainbowing
+  no va :-( Frecuencia de refresco a 50 Hz
+. Corregido fallo de parpadeo de pantalla (era cambio de pantalla cada
+  16 frames, no cada 25)
+. El sonido de la soundblaster se realiza mediante transferencias DMA. Falta
+  implementar sonido del chip ay.
+
+Versión 3.0. Diciembre 1999
+
+. Modificada paleta de colores.
+. Corregido fallo al hacer RESET.
+. Corregido fallo con los puertos del chip de sonido.
+. Corregido fallo con instrucciones EX (SP),HL que provocaban
+  el cuelgue del emulador cuando SP=65535.
+. Nuevo: Opción en el menú depuración para ver la pantalla seleccionada
+  (128k) y si está la paginación habilitada.
+. Corregido fallo con instrucción CALL y actualización de pantalla.
+. Corregido fallo con instrucciones de rotación y algunos flags.
+. Nuevo: Método para salida del altavoz del Spectrum a través de la
+  Sound Blaster mejorado.
+. Corregido fallo con instrucciones RST y modificación de la ROM.
+. Corregido fallo con modo IM2 cuando I=255. El juego Heartland ya funciona.
+. Nuevo: Actualización de la pantalla y del border en alta resolución
+  (rainbowing), con selección de salto de pantalla (frameskip). Se necesita
+  como mínimo un Pentium 133 MHz.
+. Nuevo: Emulación de los Spectrum: 16k, 128k, +2 (Ingles, Frances y Español),
+  +2A (Inglés 4.0, Inglés 4.1).
+. Nuevo: Salida del chip AY en stereo (ACB/ABC).
+. Nuevo: Posibilidad de desactivar la emulación de ruido.
+. Corregida instrucción DAA.
+. Nuevo: Emulación del valor de retorno de los puertos no usados
+  (tipicamente el puerto 255). Ahora funciona el Arkanoid y el Renegade.
+. Nuevo: Cambio de versión de los ficheros ZX, para dar soporte a todos los
+  ordenadores emulados.
+
+
+Versión 2.0. Julio 1999
+
+. Corregido fallo con flags S y P/V después de una instrucción BIT. El
+  rinoceronte del Sabre Wulf ya no camina hacia atrás!. Gracias a Philip
+  Kendall.
+. Nuevo: Opción (/eng) para ver el menú en Inglés.
+. Nuevo: Cambio en el nombre del emulador; realmente sólo ha sido
+  un pequeño cambio (de ZXSPECTR a ZXSpectr).
+. Nuevo: Opción para ver el borde mientras se carga desde cassette.
+. Nuevo: Añadidas instrucciones no documentadas:
+  -Instrucciones DD o FD +CB con 1 parametro más: RLCA (IX+3),C,
+   SET 3,(IX+0),D, etc.
+  -Instrucciones DD o FD + CB .
+  -Instrucciones repetidas NEG, IM 0,1,2.
+. Nuevo: El emulador está sincronizado !!! Ya no hay retardo !!!.
+. Nuevo: Añadida emulación del Inves Spectrum +.
+. Nuevo: Emulación del bit 3 del puerto FEh.
+. Nuevo: Pseudo-emulación de la memoria compartida.
+. Nuevo: Añadida opción para cargar y grabar pantalla.
+. Aceleración de la rutina principal del Z80.
+. Nuevo: Menú mejorado. Ahora las opciones se eligen mediante los cursores.
+. Nuevo: Añadida pantalla de inicio.
+. Rutina de cargar acelerada.
+. Corregido fallo al pulsar los cursores desde el menú y son leidos a
+  través de los puertos del joystick kempston.
+. Nuevo: Opción para modificar velocidad relativa de la CPU.
+. Rutina de paginación acelerada.
+. Nuevo: Opción para elegir paleta VGA diferente: ROJA, AZUL, AMARILLA...
+. Nuevo: Opción en el menú depuración para ver las páginas de RAM y ROM
+  activas y el puerto 254.
+. Nuevo: Añadido selector de ficheros.
+
+
+Versión 1.6. Marzo 1999
+
+. Corregido fallo al hacer DI con el menú activo.
+. Corregido fallo al hacer DI+HALT y pulsar ESC.
+. Nuevo: Opción para ver valor puertos 65533, 49149.
+
+
+Versión 1.5. Primera versión distribuida en Internet. Febrero de 1999
+
+. Nuevo: Añadida emulación del Chip AY-3-8912.
+. Nuevo: Añadida opción de pokear.
+. Corregido fallo con modo IM 2.
+. Nuevo: Menú mejorado, para poder continuar la emulación mientras está el
+  menú activo.
+
+
+Versión 1.4. Noviembre 1998
+
+. Corregido fallo al pulsar alguna tecla extendida, que genera la
+  pulsación de la tecla mayúsculas cuando Bloq. Num. está activo.
+. Nuevo: Posibilidad de reducir frecuencia de interrupciones (indicado para
+  PC'S lentos en modo 128k).
+. Añadida opción para poder cargar ficheros con cualquier flag.
+
+
+Versión 1.3. Septiembre 1998
+
+. Nuevo: Emulación de 128k. Si se dispone de memoria expandida (EMS), la paginacion
+  es instantánea.
+. Aceleración de modificación de pantalla para VGA, CGA y Hércules.
+. Arreglado fallo con el flag P/V.
+. Nuevo: Implementación de instrucciones para CPU 386 o superior.
+. Corregido fallo en actualización del reloj.
+. Nuevo: Posibilidad de bloquear el cambio de color del border.
+. Corregido fallo al grabar programas de 128k.
+. Corregido fallo al cargar desde fichero .TAP.
+. Nuevo: Emulación real del registro R.
+. Corregido fallo al grabar checksum en ficheros .TAP.
+. Nuevo: Posibilidad de retardar más el emulador (+ de 255).
+. Nuevo: Mejoras en el menu depuración.
+. Nuevo: Posibilidad de convertir ficheros .TAP a ficheros Binario.
+. Nuevo: Posibilidad de cargar un programa desde cinta de casette y poderlo
+  grabar como fichero .TAP directamente desde dentro del Emulador.
+
+
+Versión 1.2. Julio 1998
+
+. Nuevo: Cambio del color del menú (VGA).
+. Nuevo: Opción para crear fichero .TAP en insertar y extraer cinta.
+. Nuevo: Emulación del puerto de sonido (254) mediante Sound Blaster.
+. Corregido fallo en la modificación de flags en las instrucciones
+  CPI, CPD, LDI, LDD.
+. Corregido fallo en las instrucciones CPIR, CPDR que se repetian
+  si el registro BC-1 era 0 y no se repetian si BC-1 no era 0.
+. Modificación de las instrucciones EX (SP),HL ; EX (SP),IX , EX (SP),IY
+  para que actualicen la pantalla si conviene.
+. Modificación de las instrucciones PUSH  para que actualicen
+  la pantalla si conviene.
+. Corregido fallo en la instrucción POP AF y los flags N y los no usados.
+. Corregido fallo en la instrucción EX AF,AF' y los flags no usados.
+. Nuevo: Posibilidad de elegir paleta (0 o 1) en pantalla CGA.
+. Eliminación del buffer de actualización en pantalla CGA.
+. Nuevo: Incorporación de las versiones VGA, CGA y Hércules en un mismo
+  fichero.
+. Aceleración de modificación de pantalla para VGA.
+. Corregido fallo en las instrucciones LD A,I y LD A,R y los flags.
+. Nuevo: Posibilidad de cargar un programa desde cinta de casette y poderlo
+  grabar como fichero .TAP.
+
+
+Versión 1.1. Junio 1997
+
+. Carga y grabación desde disco flexible ya no da fallos.
+. Nuevo: Incorporación de Cargar y Grabar desde el mismo menú.
+. Nuevo: Incorporación del nuevo formato ZX para los programas. Se permite la
+  carga de ficheros SP.
+. Nuevo: Control del brillo de los colores (VGA).
+. Nuevo: Incorporación de salvapantallas.
+. Corregido fallo en puertos del joystick kempston.
+
+
+Versión 1.0. Abril 1996
+

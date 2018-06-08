@@ -1,0 +1,68 @@
+ZXSPECTR 3.0
+. Arreglar fallo cuando hay que crear un fichero TAP, no se apaga el motor
+  del disco A
+->probarlo con el "portatil"
+
+ZXSPECTR 3.2
+
+
+
+  Comprobar que realmente cargue
+  Se actualiza el border? quiza los dos valores de border deben de ser colores diferentes
+  
+
+
+ 	mov	seg_pantalla_multitarea,ax
+					mov   seg_pant_57,ax ;El buffer empieza a partir del desplazamiento 16384
+					add   ax,432 ;6912/16  ???
+					 ;add	ax,432 ;6912/16
+ Si el buffer empieza a partir de 16384, se está accediendo mas allá de la memoria asignada????
+					 
+  
+-Al cargar snapshot, no actualiza el borde de pantalla. Cambiado. Lo actualiza,
+ pero siempre que el menu no tenga la pausa de la cpu, si es asi, se actualiza
+ al salir del menú. Dificil de implementar del todo, debido a las rutinas de
+ actualizacion de pantalla
+
+
+ZXSpectr 3.4
+-agregar emulacion de teclas extendidas: backspace, tab, caps lock. OK. faltan teclas extendidas de pc. se hará ??
+--hay teclas extendidas de pc y teclas no extendidas que generan combinaciones de teclas en el spectrum.......
+->hay que cambiar el tipo de tabla
+
+OK * mensajes de error: convertir cargar rom, cargar pantalla, grabar pantalla
+-> si error cargar rom, muestra mensaje por pantalla, inicializa harware todo ok pero sin rom cargada 
+
+
+OK * si load"" y cinta solo tiene codigo, se queda en bucle cerrado. mejor hacer una opcion para rebobinar cinta?
+mejor expulsar cinta cuando se llega al final. OK mirar casos en los que se debe expulsar cinta
+
+OK *al grabar un programa cualquiera, da error writing. no reproducible???
+
+* gestion de errores al cargar cinta, si es i/o error, texto menu. si es error de puertos, no! OK
+si al cargar hay mas o menos bytes realmente, no deberia salir menu de error.......
+
+
+* lemmings, rocman ya no dan error. converso sigue dando error de carga (pero ya no error en menu). checksum erroneo??? no, por ahi no falla. converso.tap siempre ha dado error en todas las versiones de zxspectr
+se ha puesto ;temporal mov	flag_err,1   en linea 361
+
+
+ZXSpectr 3.5 
+
+OK Mostrar teclado en pantalla. 
+OK Documentación cinta. Ejemplo es code y luego dice basic. Ok
+Interfaz con acentos. Interfaz en catalán-> aumentará mucho el tamaño del fichero. de momento no
+OK Revisar si modo 128k se emula correctamente. Faltaba spanish 128. Ok
+OK Revisar teclas más, menos en menú. Ok
+OK Menú ayuda básica teclas. Ok
+OK Ajustar versión y fecha en código y pantalla inicio. Ok pantalla inicio
+Actualizar documentación y exportar PDF 
+OK Usar pgdown también va al final del todo
+OK Configuración para dosbox. dosbox. opciones son para arquitectura intel
+OK Info para compilar. Ok
+OK Artillero
++,- para aumentar/disminuir velocidad. implica cambiar parte del codigo de teclas de menu
+OK Compilar los binarios de linux en mi pc 32 bits . se genera makefile para 32 y 64
+añadir lineasmp de linux
+OK mas teclas extendidas: flechas
+OK cambios varios en documentacion: versiones futuras

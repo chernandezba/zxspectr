@@ -1,0 +1,1586 @@
+;Este fichero contiene todas las definiciones de macros
+;Normalmente funcionan con una direccion en el registro BX
+;y un byte o word en AL o AX tanto de entrada como de salida
+
+poke_word		MACRO  ;Hace poke de word comprobando si es pantalla,rom,etc.
+							 ;BX=Direccion AX=Word
+					pushf
+					mov   poke_word_bx,bx
+					mov   byte ptr poke_word_ax+1,ah
+					call	vga_poke_byte
+					mov   bx,poke_word_bx
+					inc   bx
+					mov   al,byte ptr poke_word_ax+1
+					call	vga_poke_byte
+					popf
+
+					ENDM
+
+poke_word_sin_pf MACRO  ;Hace poke de word comprobando si es pantalla,rom,etc.
+								;BX=Direccion AX=Word, sin hacer pushf
+					mov   poke_word_bx,bx
+					mov   byte ptr poke_word_ax+1,ah
+					call	vga_poke_byte
+					mov   bx,poke_word_bx
+					inc   bx
+					mov   al,byte ptr poke_word_ax+1
+					call	vga_poke_byte
+
+					ENDM
+
+
+poke_byte		MACRO ;LLama a _poke_byte guardando los flags
+
+					pushf
+					call	vga_poke_byte
+					popf
+
+					ENDM
+
+peek_byte		MACRO ;Este macro lee el contenido de ES:[BX] en al
+
+					mov	al,byte ptr es:[bx]
+
+					ENDM
+
+peek_word		MACRO ;Este macro lee el contenido de ES:[BX] en ax
+
+					mov	al,byte ptr es:[bx]
+					mov	ah,byte ptr es:[bx+1]
+
+					ENDM
+
+lee_byte_pc		MACRO ;Este macro lee el byte contenido en (PC)=SI
+							;y incrementa si en 1
+
+					lods	es:fuente
+
+					ENDM
+
+lee_word_pc		MACRO ;Este macro lee el word contenido en (PC)=SI
+							;y incrementa si en 2
+
+					lods  es:fuente
+					mov	ah,al
+					lods  es:fuente
+					xchg	ah,al
+
+					ENDM
+
+lee_desp_pc		MACRO ;Este macro carga en AX el desplazamiento contenido
+							;en (PC)=SI y incrementa si en 1
+
+					lee_byte_pc
+					cbw
+
+					ENDM
+
+
+push_ax			MACRO ;Este macro decrementa el SP del Z80 en 2
+							;y pone en esa direcci¢n el contenido del registro AX
+
+					pushf
+
+					dec   di
+					dec   di
+					mov   bx,di  ;BX=SP
+
+					mov   poke_word_bx,bx
+					mov   byte ptr poke_word_ax+1,ah
+					call	vga_poke_byte
+					mov   bx,poke_word_bx
+					inc   bx
+					mov   al,byte ptr poke_word_ax+1
+					call	vga_poke_byte
+
+					popf
+
+
+					ENDM
+
+call_ax			MACRO ;Este macro decrementa el SP del Z80 en 2
+							;y pone en esa direcci¢n el contenido del registro SI
+							;y carga SI=PC con ax
+
+               mov   call_ax_ax,ax
+					pushf
+
+					dec   di
+					dec   di
+					mov   bx,di  ;BX=SP
+					mov	ax,si
+
+					mov   poke_word_bx,bx
+					mov   byte ptr poke_word_ax+1,ah
+					call	vga_poke_byte
+					mov   bx,poke_word_bx
+					inc   bx
+					mov   al,byte ptr poke_word_ax+1
+					call	vga_poke_byte
+
+					popf
+			      mov   si,call_ax_ax
+
+					ENDM
+rst_n          MACRO direccion
+					;Este macro decrementa el SP del Z80 en 2
+					;y pone en esa direcci¢n el contenido del registro SI
+					;y carga SI=PC con direccion
+
+					pushf
+
+					dec   di
+					dec   di
+					mov   bx,di  ;BX=SP
+					mov	ax,si
+
+					mov   poke_word_bx,bx
+					mov   byte ptr poke_word_ax+1,ah
+					call	vga_poke_byte
+					mov   bx,poke_word_bx
+					inc   bx
+					mov   al,byte ptr poke_word_ax+1
+					call	vga_poke_byte
+
+					popf
+
+
+					mov   si,direccion
+
+					ENDM
+
+
+
+pop_ax			MACRO ;Este macro lee en AX el contenido del registro SP
+							;del Z80 y incrementa el SP en 2
+
+					mov	al,byte ptr es:[di]
+
+					pushf   			  
+					inc	di
+					mov	ah,byte ptr es:[di]
+					inc	di
+					popf
+
+					ENDM
+
+ret_pc			MACRO ;Este macro lee en SI el contenido del registro SP
+							;del Z80 y incrementa el SP en 2
+
+					mov	al,byte ptr es:[di]
+
+					pushf
+					inc	di
+					mov	ah,byte ptr es:[di]
+					mov   si,ax
+					inc	di
+					popf
+
+					ENDM
+
+bit				MACRO nbit,reg
+					LOCAL bita1,bita2
+					;Este macro pone el flag Z de acuerdo al
+					;contenido del bit nbit del registro del Z80 reg
+					;Tambien hay que poner el flag P/V con el mismo valor que
+					;coge el flag Z, y el flag S debe tener el valor del bit 7
+               ;del operando (si es que se compara el bit 7)
+
+					mov	al,reg_&reg
+					lahf
+
+					N=1
+					REPT nbit+1
+					  N=N*2
+					ENDM
+
+					N=N/2
+
+					test	al,N
+					jnz	bita1
+					;SZxHxVNC
+					or		ah,01000100b ;SZxHxVNC
+					jmp	short bita2
+bita1:			and	ah,10111011b
+bita2:
+					and 	al,128
+
+			      and   al,N
+
+					and 	ah,01111111b
+					or		ah,al
+					sahf
+					ret
+
+					ENDM
+
+bithl				MACRO nbit
+					LOCAL bithla1,bithla2
+					;Este macro pone el flag Z de acuerdo al
+					;contenido del bit nbit del registro (HL) del Z80
+					;Tambien hay que poner el flag P/V con el mismo valor que
+					;coge el flag Z, y el flag S debe tener el valor del bit 7
+					;del operando(si es que se compara el bit 7)
+					mov 	bx,word ptr reg_l
+					mov	al,byte ptr es:[bx]
+
+					lahf
+
+					N=1
+					REPT nbit+1
+					  N=N*2
+					ENDM
+					N=N/2
+					test	al,N
+					jnz	bithla1
+					;SZxHxVNC
+					or		ah,01000100b ;SZxHxVNC
+					jmp	short bithla2
+bithla1:			and	ah,10111011b
+bithla2:
+					and 	al,128
+               and   al,N
+					and 	ah,01111111b
+					or		ah,al
+					sahf
+					ret
+
+					ENDM
+
+bits				MACRO ;Este macro realiza los operandos 64-127 con pref. 203
+							;Son BIT nbit,reg
+
+					M=0
+					COD=64
+					REPT 8
+					  bits2 %COD,M,b
+					  COD=COD+1
+					  bits2 %COD,M,c
+					  COD=COD+1
+					  bits2 %COD,M,d
+					  COD=COD+1
+					  bits2 %COD,M,e
+					  COD=COD+1
+					  bits2 %COD,M,h
+					  COD=COD+1
+					  bits2 %COD,M,l
+					  COD=COD+1
+					  bits3 %COD,M
+					  COD=COD+1
+					  bits2 %COD,M,a
+					  COD=COD+1
+
+					  M=M+1
+					ENDM
+
+					ENDM
+
+bits2				MACRO NUM,MM,X;Auxiliar para bits
+
+codcb&NUM:		bit	MM,X
+
+					ENDM
+
+bits3				MACRO NUM,MM;Auxiliar para bits
+
+codcb&NUM:		bithl	MM
+
+					ENDM
+
+bitxycb			MACRO nbit
+					LOCAL bitxycb1,bitxycb2
+
+					;Este macro pone el flag Z de acuerdo al
+					;contenido del bit nbit del registro (HL) del Z80
+					;Tambien hay que poner el flag P/V con el mismo valor que
+					;coge el flag Z, y el flag S debe tener el valor del bit 7
+					;del operando(si es que se compara el bit 7)
+
+
+					lahf
+
+					N=1
+					REPT nbit+1
+					  N=N*2
+					ENDM
+
+					N=N/2
+
+					test	al,N
+					jnz	bitxycb1
+					;SZxHxVNC
+					or		ah,01000100b
+					jmp	short bitxycb2
+bitxycb1:   	and	ah,10111011b
+bitxycb2:
+					and 	al,128
+					and   al,N
+					and 	ah,01111111b
+					or		ah,al
+
+					sahf
+					ret
+
+					ENDM
+
+
+res				MACRO nbit,reg
+					;Este macro pone el bit nbit a 0
+					;del registro del Z80 reg
+					lahf
+
+					N=1
+					REPT nbit+1
+					  N=N*2
+					ENDM
+
+					N=N/2
+					N=255-N
+					and	reg_&reg,N
+					sahf
+					ret
+
+					ENDM
+
+reshl				MACRO nbit
+					;Este macro pone el bit nbit a 0
+					;del registro (HL) del Z80
+					mov 	bx,word ptr reg_l
+					mov	al,byte ptr es:[bx]
+					lahf
+
+					N=1
+					REPT nbit+1
+					  N=N*2
+					ENDM
+
+					N=N/2
+					N=255-N
+					and	al,N
+					sahf
+					poke_byte
+					ret
+
+					ENDM
+
+ress				MACRO ;Este macro realiza los operandos 128-191 con pref. 203
+							;Son RES nbit,reg
+
+					M=0
+					COD=128
+					REPT 8
+					  ress2 %COD,M,b
+					  COD=COD+1
+					  ress2 %COD,M,c
+					  COD=COD+1
+					  ress2 %COD,M,d
+					  COD=COD+1
+					  ress2 %COD,M,e
+					  COD=COD+1
+					  ress2 %COD,M,h
+					  COD=COD+1
+					  ress2 %COD,M,l
+					  COD=COD+1
+					  ress3 %COD,M
+					  COD=COD+1
+					  ress2 %COD,M,a
+					  COD=COD+1
+
+					  M=M+1
+					ENDM
+
+					ENDM
+
+ress2				MACRO NUM,MM,X;Auxiliar para ress
+
+codcb&NUM:		res	MM,X
+
+					ENDM
+
+ress3				MACRO NUM,MM;Auxiliar para ress
+
+codcb&NUM:		reshl	MM
+
+					ENDM
+
+set				MACRO nbit,reg
+					;Este macro pone el bit nbit a 1
+					;del registro del Z80 reg
+					lahf
+
+					N=1
+					REPT nbit+1
+					  N=N*2
+					ENDM
+
+					N=N/2
+					or	  reg_&reg,N
+					sahf
+					ret
+
+					ENDM
+
+sethl				MACRO nbit
+					;Este macro pone el bit nbit a 1
+					;del registro (HL) del Z80
+					mov 	bx,word ptr reg_l
+					mov	al,byte ptr es:[bx]
+					lahf
+
+					N=1
+					REPT nbit+1
+					  N=N*2
+					ENDM
+
+					N=N/2
+					or	  al,N
+					sahf
+					poke_byte
+					ret
+
+					ENDM
+
+_sets				MACRO ;Este macro realiza los operandos 192-255 con pref. 203
+							;Son SET nbit,reg
+
+					M=0
+					COD=192
+					REPT 8
+					  sets2 %COD,M,b
+					  COD=COD+1
+					  sets2 %COD,M,c
+					  COD=COD+1
+					  sets2 %COD,M,d
+					  COD=COD+1
+					  sets2 %COD,M,e
+					  COD=COD+1
+					  sets2 %COD,M,h
+					  COD=COD+1
+					  sets2 %COD,M,l
+					  COD=COD+1
+					  sets3 %COD,M
+					  COD=COD+1
+					  sets2 %COD,M,a
+					  COD=COD+1
+
+					  M=M+1
+					ENDM
+
+					ENDM
+
+sets2				MACRO NUM,MM,X;Auxiliar para sets
+
+codcb&NUM:		set	MM,X
+
+					ENDM
+
+sets3				MACRO NUM,MM;Auxiliar para sets
+
+codcb&NUM:		sethl	MM
+
+					ENDM
+
+rotacion_xy  	MACRO instruccion,registro
+					 LOCAL nocarry
+					;N,H=0
+					;Modificados flags C,Z,P,S
+					;SZxHxVNC
+
+  					lahf      ;SZxHxVNC
+
+  					&instruccion al,1
+
+
+  					IFNB <registro>
+  					  mov     byte ptr reg_&registro,al
+  					ENDIF
+
+					mov    ch,ah
+
+					lahf
+  					mov     dh,ah ;Coger C
+
+  					or      al,al
+  					lahf      ;SZxHxVNC
+  					and     ch,00101000b
+  					and     ah,11000100b
+  					test    dh,1 ;Ver C
+  					jz      nocarry
+  					or      ah,1
+nocarry:
+  					or      ah,ch
+  					sahf
+
+					mov	flag_n,0
+					poke_byte
+
+					ENDM
+
+sll_xy  	      MACRO registro
+					;N,H=0
+					;Modificados flags C,Z,P,S
+					;SZxHxVNC
+					lahf
+
+					sal	al,1
+
+					mov	ch,ah
+					lahf
+					and	ah,11000101b
+					and	ch,00101010b
+					or		ah,ch
+
+					or		al,1
+
+					IFNB <registro>
+					  mov	  byte ptr reg_&registro,al
+					ENDIF
+
+					sahf
+
+					mov	flag_n,0
+					poke_byte
+
+					ENDM
+
+
+
+resxycb			MACRO
+
+					cod=128
+					nbit=0
+
+					REPT 8
+					  resxycb2 %cod,b,nbit
+					  cod=cod+1
+					  resxycb2 %cod,c,nbit
+					  cod=cod+1
+					  resxycb2 %cod,d,nbit
+					  cod=cod+1
+					  resxycb2 %cod,e,nbit
+					  cod=cod+1
+					  resxycb2 %cod,h,nbit
+					  cod=cod+1
+					  resxycb2 %cod,l,nbit
+					  cod=cod+1
+					  resxycb2 %cod,,nbit
+					  cod=cod+1
+					  resxycb2 %cod,a,nbit
+					  cod=cod+1
+
+					  nbit=nbit+1
+					ENDM
+
+					ENDM
+
+resxycb2	      MACRO cod,registro,nbit
+					LOCAL N
+codxycb&cod:
+
+					pushf
+
+					N=1
+					REPT nbit+1
+					  N=N*2
+					ENDM
+
+					N=N/2
+					N=255-N
+					and	al,N
+
+					IFNB <registro>
+					  mov	  byte ptr reg_&registro,al
+					ENDIF
+
+					call	vga_poke_byte
+					popf
+					ret
+
+					ENDM
+
+
+setxycb			MACRO
+
+					cod=192
+					nbit=0
+
+					REPT 8
+					  setxycb2 %cod,b,nbit
+					  cod=cod+1
+					  setxycb2 %cod,c,nbit
+					  cod=cod+1
+					  setxycb2 %cod,d,nbit
+					  cod=cod+1
+					  setxycb2 %cod,e,nbit
+					  cod=cod+1
+					  setxycb2 %cod,h,nbit
+					  cod=cod+1
+					  setxycb2 %cod,l,nbit
+					  cod=cod+1
+					  setxycb2 %cod,,nbit
+					  cod=cod+1
+					  setxycb2 %cod,a,nbit
+					  cod=cod+1
+
+					  nbit=nbit+1
+					ENDM
+
+					ENDM
+
+
+setxycb2	      MACRO cod,registro,nbit
+					LOCAL N
+
+codxycb&cod:
+					pushf
+
+					N=1
+					REPT nbit+1
+					  N=N*2
+					ENDM
+
+					N=N/2
+					or  	al,N
+
+					IFNB <registro>
+					  mov	  byte ptr reg_&registro,al
+					ENDIF
+
+					call	vga_poke_byte
+					popf
+					ret
+
+					ENDM
+
+
+
+cargar_reg_f	MACRO ;Carga reg_f con flags y flag_n
+
+					lahf
+					and	ah,11010101b
+					or		ah,flag_n
+					mov	al,reg_f
+					and	al,00101000b   ;Conservar flags no usados
+					or		ah,al
+					mov	reg_f,ah
+
+					ENDM
+
+cargar_flags_con_f MACRO ;Carga flags del 8088 con los del Z80
+
+					lahf
+					mov	al,reg_f
+					and	al,11010101b
+					and	ah,00101010b
+					or		ah,al
+					sahf
+
+					ENDM
+
+etiqueta_codigo MACRO inicio,fin ;Este macro crea una serie words
+											;de la forma:
+											;offset codigoinicio,offset codigoinicio+1
+											;,offset codigoinicio+2,...,offset codigofin
+
+					N=inicio
+					REPT fin-inicio+1
+					  etiqueta_codigo2 %N
+					  N=N+1
+					ENDM
+
+					ENDM
+
+etiqueta_codigo2  MACRO X;Es auxiliar para etiqueta_codigo
+
+					dw		codigo&X
+
+					ENDM
+
+etiqueta_coded MACRO inicio,fin  ;Este macro crea una serie words
+											;de la forma:
+											;offset codedinicio,offset codedinicio+1
+											;,offset codedinicio+2,...,offset codedfin
+
+					N=inicio
+					REPT fin-inicio+1
+					  etiqueta_coded2 %N
+					  N=N+1
+					ENDM
+
+					ENDM
+
+etiqueta_coded2  MACRO X;Es auxiliar para etiqueta_coded
+
+					dw		coded&X
+
+					ENDM
+
+etiqueta_codcb MACRO inicio,fin  ;Este macro crea una serie words
+											;de la forma:
+											;offset codcbinicio,offset codcbinicio+1
+											;,offset codcbinicio+2,...,offset codcbfin
+
+					N=inicio
+					REPT fin-inicio+1
+					  etiqueta_codcb2 %N
+					  N=N+1
+					ENDM
+
+					ENDM
+
+etiqueta_codcb2  MACRO X;Es auxiliar para etiqueta_codcb
+
+					dw		codcb&X
+
+					ENDM
+
+etiqueta_coddd MACRO inicio,fin  ;Este macro crea una serie words
+											;de la forma:
+											;offset codxyinicio,offset codxyinicio+1
+											;,offset codxyinicio+2,...,offset coxybfin
+
+					N=inicio
+					REPT fin-inicio+1
+					  etiqueta_coddd2 %N
+					  N=N+1
+					ENDM
+
+					ENDM
+
+etiqueta_coddd2  MACRO X;Es auxiliar para etiqueta_codxy
+
+					dw		coddd&X
+
+					ENDM
+
+etiqueta_codfd MACRO inicio,fin  ;Este macro crea una serie words
+											;de la forma:
+											;offset codxyinicio,offset codxyinicio+1
+											;,offset codxyinicio+2,...,offset coxybfin
+
+					N=inicio
+					REPT fin-inicio+1
+					  etiqueta_codfd2 %N
+					  N=N+1
+					ENDM
+
+					ENDM
+
+etiqueta_codfd2  MACRO X;Es auxiliar para etiqueta_codfd
+
+					dw		codfd&X
+
+					ENDM
+
+etiqueta_codxycb MACRO inicio,fin  ;Este macro crea una serie words
+											;de la forma:
+											;offset codxycbinicio,offset codxycbinicio+1
+											;,offset codxycbinicio+2,...,offset codxycbfin
+
+					N=inicio
+					REPT fin-inicio+1
+					  etiqueta_codxycb2 %N
+					  N=N+1
+					ENDM
+
+					ENDM
+
+etiqueta_codxycb2  MACRO X;Es auxiliar para etiqueta_codxycb
+
+					dw		codxycb&X
+
+					ENDM
+
+etiqueta_nop	MACRO inicio,fin ;Este macro crea una serie de words
+										  ;de la forma offset codigo0,offset codigo0,
+										  ;...,offset codigo0
+
+					N=inicio
+					REPT fin-inicio+1
+					  dw codigo0
+					  N=N+1
+					ENDM
+
+					ENDM
+
+dec_reg		   MACRO registro
+					LOCAL nopv
+					;Este macro resta al registro indicado 1
+					;actualizando flag P/V oportunamente
+					mov	al,reg_&registro
+					mov   ch,al
+					dec	al
+					mov	reg_&registro,al
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 1 a 0, overflow
+					jns   nopv
+					or		al,al ;Antes era bit 7=1
+					js		nopv 
+					;Hay cambio. Pasa el bit 7 a 0
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	flag_n,2 ;Decir que es resta
+					ENDM
+
+
+
+
+					
+dec_al		   MACRO
+					LOCAL nopv
+					;Este macro resta a AL 1
+					;actualizando flag P/V oportunamente
+					mov	ch,al
+					dec	al
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 1 a 0, overflow
+					jns   nopv
+					or		al,al ;Antes era bit 7=1
+					js		nopv 
+					;Hay cambio. Pasa el bit 7 a 0
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	flag_n,2 ;Decir que es resta
+					ENDM
+
+
+sub_al_reg		MACRO registro
+					LOCAL nopv
+					;Este macro resta a AL el registro indicado
+					;actualizando flag P/V oportunamente
+					mov	al,reg_a
+					mov	ch,al
+					sub	al,reg_&registro
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 1 a 0, overflow
+					jns   nopv
+					or		al,al ;Antes era bit 7=1
+					js		nopv 
+					;Hay cambio. Pasa el bit 7 a 0
+					or		ah,00000100b 	
+nopv:
+					sahf
+					mov	reg_a,al
+					mov	flag_n,2 ;Decir que se ha hecho resta
+					ENDM
+
+sbc_al_reg		MACRO registro
+					LOCAL nopv
+					;Este macro resta con acarreo a AL el registro indicado
+					;actualizando flag P/V oportunamente
+					mov	al,reg_a
+					mov	ch,al
+					sbb	al,reg_&registro
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 1 a 0, overflow
+					jns   nopv
+					or		al,al ;Antes era bit 7=1
+					js		nopv 
+					;Hay cambio. Pasa el bit 7 a 0
+					or		ah,00000100b 	
+nopv:
+					sahf
+					mov	reg_a,al
+					mov	flag_n,2 ;Decir que se ha hecho resta
+					ENDM
+
+					
+sub_al_dl		MACRO
+					LOCAL nopv
+					;Este macro resta a AL el registro DL
+					;actualizando flag P/V oportunamente
+					mov	al,reg_a
+					mov	ch,al
+					sub	al,dl
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 1 a 0, overflow
+					jns   nopv
+					or		al,al ;Antes era bit 7=1
+					js		nopv 
+					;Hay cambio. Pasa el bit 7 a 0
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	reg_a,al
+					mov	flag_n,2 ;Decir que se ha hecho resta
+					ENDM
+
+sbc_al_dl		MACRO
+					LOCAL nopv
+					;Este macro resta con acarreo a AL el registro DL
+					;actualizando flag P/V oportunamente
+					mov	al,reg_a
+					mov	ch,al
+					sbb	al,dl
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 1 a 0, overflow
+					jns   nopv
+					or		al,al ;Antes era bit 7=1
+					js		nopv 
+					;Hay cambio. Pasa el bit 7 a 0
+					or		ah,00000100b 	
+nopv:
+					sahf
+					mov	reg_a,al
+					mov	flag_n,2 ;Decir que se ha hecho resta
+					ENDM
+
+
+inc_reg		   MACRO registro
+					LOCAL nopv
+					;Este macro suma al registro indicado 1
+					;actualizando flag P/V oportunamente
+					mov	al,reg_&registro
+					mov	ch,al
+					inc 	al
+					mov	reg_&registro,al
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 0 a 1, overflow
+					js    nopv
+					or		al,al ;Antes era bit 7=0
+					jns 	nopv 
+					;Hay cambio. Pasa el bit 7 a 1
+					or		ah,00000100b 	
+nopv:
+					sahf
+					mov	flag_n,0 ;Decir que es suma
+					ENDM
+
+
+inc_al		   MACRO
+					LOCAL nopv
+					;Este macro suma a AL 1
+					;actualizando flag P/V oportunamente
+					mov	ch,al
+					inc	al
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 0 a 1, overflow
+					js    nopv
+					or		al,al ;Antes era bit 7=0
+					jns 	nopv
+					;Hay cambio. Pasa el bit 7 a 1
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	flag_n,0 ;Decir que es suma
+					ENDM
+
+add_al_dl		MACRO
+					LOCAL nopv
+					;Este macro suma a AL el registro DL
+					;actualizando flag P/V oportunamente
+					mov	al,reg_a
+					mov	ch,al
+					add	al,dl
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 0 a 1, overflow
+					js    nopv
+					or		al,al ;Antes era bit 7=0
+					jns 	nopv
+					;Hay cambio. Pasa el bit 7 a 1
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	reg_a,al
+					mov	flag_n,0 ;Decir que se ha hecho suma
+
+					ENDM
+
+adc_al_dl		MACRO
+					LOCAL nopv
+					;Este macro suma con acarreo a AL el registro DL
+					;actualizando flag P/V oportunamente
+					mov	al,reg_a
+					mov	ch,al
+					adc	al,dl
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 0 a 1, overflow
+					js    nopv
+					or		al,al ;Antes era bit 7=0
+					jns 	nopv
+					;Hay cambio. Pasa el bit 7 a 1
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	reg_a,al
+					mov	flag_n,0 ;Decir que se ha hecho suma
+
+					ENDM
+
+
+add_al_reg		MACRO registro
+					LOCAL nopv
+					;Este macro suma a AL el registro indicado
+					;actualizando flag P/V oportunamente
+					mov	al,reg_a
+					mov	ch,al
+					add	al,reg_&registro
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 0 a 1, overflow
+					js    nopv
+					or		al,al ;Antes era bit 7=0
+					jns 	nopv
+					;Hay cambio. Pasa el bit 7 a 1
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	reg_a,al
+					mov	flag_n,0 ;Decir que se ha hecho suma
+
+					ENDM
+
+adc_al_reg		MACRO registro
+					LOCAL nopv
+					;Este macro suma con acarreo a AL el registro indicado
+					;actualizando flag P/V oportunamente
+					mov	al,reg_a
+					mov	ch,al
+					adc	al,reg_&registro
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 0 a 1, overflow
+					js    nopv
+					or		al,al ;Antes era bit 7=0
+					jns 	nopv
+					;Hay cambio. Pasa el bit 7 a 1
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	reg_a,al
+					mov	flag_n,0 ;Decir que se ha hecho suma
+
+					ENDM
+
+cp_al_reg		MACRO registro
+					LOCAL nopv
+					;Este macro compara a AL el registro indicado
+					;actualizando flag P/V oportunamente
+					mov	al,reg_a
+					mov	ch,al
+					cmp	al,reg_&registro
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 1 a 0, overflow
+					jns   nopv
+					or		al,al ;Antes era bit 7=1
+					js		nopv
+					;Hay cambio. Pasa el bit 7 a 0
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	flag_n,2 ;Decir que se ha hecho resta
+					ENDM
+
+
+cp_al_dl			MACRO
+					LOCAL nopv
+					;Este macro compara a AL el registro DL
+					;actualizando flag P/V oportunamente
+					mov	al,reg_a
+					mov	ch,al
+					cmp	al,dl
+					lahf
+					and	ah,11111011b
+					or		ch,ch ;Si cambia de 1 a 0, overflow
+					jns   nopv
+					or		al,al ;Antes era bit 7=1
+					js		nopv
+					;Hay cambio. Pasa el bit 7 a 0
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	flag_n,2 ;Decir que se ha hecho resta
+					ENDM
+
+sbc_hl_reg		MACRO registro
+					LOCAL nopv
+					;Este macro resta a reg_hl con acarreo el registro reg
+					;actualizando flag P/V oportunamente
+					mov	bx,word ptr reg_l
+					mov	cx,bx
+					sbb   bl,reg_&registro
+					sbb   bh,byte ptr reg_&registro+1
+
+					lahf
+					or		bx,bx
+					mov	al,ah
+					lahf    ;SZxHxVNC
+					and   ah,01000000b
+					and   al,10111011b
+					or		ah,al
+					;sahf
+
+					;lahf
+					;and  ah,11111011b
+
+					or		cx,cx ;Si cambia de 1 a 0, overflow
+					jns   nopv
+					or		bx,bx ;Antes era bit 15=1
+					js		nopv
+					;Hay cambio. Pasa el bit 15 a 0
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	word ptr reg_l,bx
+					mov   flag_n,2
+					ENDM
+
+COMMENT !
+        ADD HL,xx                 Consider the instruction being done in two steps:
+        ADC HL,xx/SBC HL,xx       first the LSBs being added, then the MSBs. The
+                                  3,H,5 and S flags are set as for the second step,
+                                  and Z is set only if the entire 16-bit result is
+                                  zero. (S and Z are not changed by ADD HL,xx).
+!
+add_hl_reg     MACRO registro
+
+					;FLAGS: Carry si hay acarreo, H si acarreo bit 11
+					;los otros no modificados
+					lahf
+					mov   bl,ah
+					mov   ax,word ptr reg_l
+					add   al,byte ptr reg_&registro
+					adc   ah,byte ptr reg_&registro+1
+					mov   word ptr reg_l,ax
+
+					lahf    ;SZxHxVNC
+					and   ah,00010001b
+					and   bl,11101110b
+					or    ah,bl
+					sahf
+					mov   flag_n,0
+					ret
+
+					ENDM
+
+adc_hl_reg		MACRO registro
+					LOCAL nopv
+					;Este macro suma a reg_hl con acarreo el registro reg
+					;actualizando flag P/V oportunamente
+					mov	bx,word ptr reg_l
+					mov	cx,bx
+					adc   bl,reg_&registro
+					adc   bh,byte ptr reg_&registro+1
+
+					lahf
+					or		bx,bx
+					mov	al,ah
+					lahf
+					and   ah,01000000b
+					and   al,10111011b
+					or		ah,al
+					;sahf
+
+					;lahf
+					;and  ah,11111011b
+					or		cx,cx ;Si cambia de 0 a 1, overflow
+					js    nopv
+					or		bx,bx ;Antes era bit 15=0
+					jns   nopv
+					;Hay cambio. Pasa el bit 15 a 1
+					or		ah,00000100b
+nopv:
+					sahf
+					mov	word ptr reg_l,bx
+					mov   flag_n,0
+					ENDM
+
+add_xy_reg     MACRO registro,registroxy
+
+					;FLAGS: Carry si hay acarreo, H si acarreo bit 11
+					;los otros no modificados
+					lahf
+					mov   bl,ah
+					mov   ax,word ptr reg_&registroxy
+					add   al,byte ptr reg_&registro
+					adc   ah,byte ptr reg_&registro+1
+					mov   word ptr reg_&registroxy,ax
+					lahf
+					and   ah,00010001b
+					and   bl,11101110b
+					or    ah,bl
+					sahf
+					mov   flag_n,0
+					ret
+
+					ENDM
+
+rotacion0_a		MACRO instruccion
+					;Usado por RLA, RRA, RRCA, RLCA
+					;N,H=0
+					;Modificado flag C
+
+
+					lahf
+
+					&instruccion reg_a,1
+
+
+					mov	ch,ah
+					lahf    ;SZxHxVNC
+					and	ah,00000001b
+					and	ch,11101110b
+					or		ah,ch
+					sahf
+
+					mov	flag_n,0
+
+
+					ENDM
+
+rotacion 		MACRO instruccion,registro
+					LOCAL nocarry
+;Las rotaciones del 8088 solo modifican carry,Overflow
+					;N,H=0
+					;Modificados flags C,Z,P,S
+					;SZxHxVNC
+
+
+					lahf      ;SZxHxVNC
+
+					mov   al,reg_&registro
+					&instruccion al,1
+					mov   reg_&registro,al
+
+					mov ch,ah
+
+
+					lahf
+					mov   dh,ah ;Coger C
+
+					or    al,al
+					lahf      ;SZxHxVNC
+					and   ch,00101000b
+					and   ah,11000100b
+					test  dh,1 ;Ver C
+					jz    nocarry
+					or    ah,1
+nocarry:
+					or    ah,ch
+					sahf
+
+
+					mov	flag_n,0
+
+					ENDM
+
+rotacion_hl		MACRO instruccion
+					LOCAL nocarry
+					;N,H=0
+					;Modificados flags C,Z,P,S
+					;SZxHxVNC
+
+
+					mov	bx,word ptr reg_l
+					peek_byte
+
+					lahf
+
+					&instruccion al,1
+
+					mov ch,ah
+
+					lahf
+					mov   dh,ah ;Coger C
+
+					or    al,al
+					lahf
+					and   ch,00101000b
+					and   ah,11000100b
+					test  dh,1 ;Ver C
+					jz    nocarry
+					or    ah,1
+nocarry:
+					or    ah,ch
+					sahf
+
+					mov	flag_n,0
+					poke_byte
+
+
+					ENDM
+
+rotacion_sll   MACRO registro
+					LOCAL nocarry
+;Las rotaciones del 8088 solo modifican carry,Overflow
+					;N,H=0
+					;Modificados flags C,Z,P,S
+					;SZxHxVNC
+
+
+					lahf      ;SZxHxVNC
+
+					mov   al,reg_&registro
+					sal	al,1
+
+					mov   ch,ah
+
+
+					lahf
+					mov   dh,ah ;Coger C
+					or		al,1
+					mov	reg_&registro,al
+
+					;or    al,al
+					lahf      ;SZxHxVNC
+					and   ch,00101000b
+					and   ah,11000100b
+					test  dh,1 ;Ver C
+					jz    nocarry
+					or    ah,1
+nocarry:
+					or    ah,ch
+					sahf
+
+
+					mov	flag_n,0
+
+					ENDM
+
+rotacion_sll_hl MACRO
+					LOCAL nocarry
+					;N,H=0
+					;Modificados flags C,Z,P,S
+					;SZxHxVNC
+
+
+					mov	bx,word ptr reg_l
+					peek_byte
+
+					lahf
+
+					sal	al,1
+					;&instruccion al,1
+
+					mov   ch,ah
+
+					lahf
+					mov   dh,ah ;Coger C
+					or		al,1
+
+					;or    al,al
+					lahf
+					and   ch,00101000b
+					and   ah,11000100b
+					test  dh,1 ;Ver C
+					jz    nocarry
+					or    ah,1
+nocarry:
+					or    ah,ch
+					sahf
+
+					mov	flag_n,0
+					poke_byte
+
+
+					ENDM
+
+poke128k			MACRO
+					LOCAL	poke128k_finNC0,poke128k_0,poke128k_fin2,poke128k_finNC,poke128k_finC,poke128k_c000,poke128k_8000,poke128k_c000_ram2,poke128k_c000_ram5,poke128k_4567rom_2,poke128k_no4567rom,poke128k_no4563rom,poke128k_00,poke128k_finC0,poke128k_000,poke128k_no16k
+					;Este macro sirve para ver si hay que pokear en c000h-ffffh
+					;si esta RAM 2 o 5 o si hay que pokear en 4000h-7fffh o
+					;8000h-bfffh cuando se pokea en c000h-ffffh
+					;Viene de la rutina [_poke_byte0_p]
+					;Entrada BX=Direccion, AL=Byte
+
+					;Ver antes si se esta en modo 16k:
+					cmp	ordenador_emulado,0
+					jnz	poke128k_no16k
+					
+					;Es modo 16k. Ver si se pokea en rango 32768-65535
+					test	bh,10000000b
+					jnz	poke128k_finC0
+					
+               mov	byte ptr es:[bx],al
+               jmp   poke128k_finC
+					
+poke128k_no16k:
+					
+					mov	byte ptr es:[bx],al
+					
+					;Primero mirar si hay 128k disponible
+					test	bits_estado3,00100000b
+					jz		poke128k_0
+
+poke128k_finC0:
+					;Modo 48k.
+									
+					jmp	poke128k_finC
+
+poke128k_finNC0:
+					jmp	poke128k_finNC
+
+poke128k_0:
+
+					;Mirar si esta paginacion de RAM en ROM
+					test	puerto_8189,1
+					jz 	poke128k_00
+
+					;Esta paginacion de RAM en ROM
+					mov	ah,puerto_8189
+					and	ah,00000110b
+					cmp	ah,00000000b
+					jz		poke128k_finNC0  ;Estan paginadas las RAMS 0,1,2,3
+					;No hay que actualizar pantalla
+
+					cmp	ah,00000010b
+					jnz	poke128k_no4567rom
+					;Estan paginadas las RAMS 4,5,6,7
+					;Mirar si se pokea en pagina 5 o la 7
+					cmp	bh,192
+					jc		poke128k_4567rom_2
+					;Se pokea en la pagina 7
+					;Mirar si esta la pantalla 7
+					test	puerto_32765,8
+					jz		poke128k_finNC0
+
+					;Hay que actualizar la pantalla
+					sub	bx,32768
+					jmp	poke128k_finC
+
+poke128k_4567rom_2:
+					cmp	bh,128
+					jnc	poke128k_finNC0 ;Poke en pagina 6
+					cmp	bh,64
+					jc		poke128k_finNC0 ;Poke en pagina 4
+
+					;Se pokea en la pagina 5
+					;Mirar si esta la pantalla 5
+					test 	puerto_32765,8
+					jnz	poke128k_finNC0
+					;Hay que actualizar la pantalla
+					jmp	poke128k_finC
+
+
+poke128k_no4567rom:
+					cmp	ah,00000100b
+					jnz	poke128k_no4563rom
+
+					;Estan paginadas las RAMS 4,5,6,3
+					;Mirar si se pokea en la pagina 5
+					cmp	bh,128
+					jnc	poke128k_finNC0
+					cmp	bh,64
+					jc		poke128k_finNC0
+
+					;Se pokea en la pagina 5
+					;Mirar si esta la pantalla 5
+					test 	puerto_32765,8
+					jnz	poke128k_finNC0
+					;Hay que actualizar la pantalla
+					jmp	poke128k_finC
+
+poke128k_no4563rom:
+					;Estan paginadas las RAMS 4,7,6,3
+					;Mirar si se pokea en la pagina 7
+					cmp	bh,128
+					jnc	poke128k_finNC0
+					cmp	bh,64
+					jc		poke128k_finNC0
+
+					;Se pokea en la pagina 7
+					;Mirar si esta la pantalla 7
+					test 	puerto_32765,8
+					jz		poke128k_finNC0
+					;Hay que actualizar la pantalla
+					jmp	poke128k_finC
+
+poke128k_00:
+
+					;Mirar en que rango se pokea
+					cmp	bh,192 ;192*256=49152
+					jnc	poke128k_c000
+					cmp	bh,128 ;128*256=32768
+					jnc	poke128k_8000
+
+					;Poke en pantalla
+
+					;Mirar si esta pantalla 0
+					test  puerto_32765,8
+
+					jz	   poke128k_000
+					jmp	poke128k_finNC0
+poke128k_000:
+					;Mirar si esta RAM 5 paginada
+					mov	ah,puerto_32765
+					and	ah,7
+					cmp	ah,5
+					jnz	poke128k_finC
+
+					;Pokear en 49152-65535
+					mov	byte ptr es:[bx+32768],al
+
+					jmp	short poke128k_finC
+
+poke128k_8000:
+					;Mirar si esta RAM 2 paginada
+					mov	ah,puerto_32765
+					and	ah,7
+					cmp	ah,2
+					jnz	poke128k_finNC
+					;Pokear en 49152-65535
+					mov	byte ptr es:[bx+16384],al
+					jmp	short poke128k_finNC
+
+poke128k_c000:
+					;Mirar si esta RAM 5 paginada
+					mov	ah,puerto_32765
+					and	ah,7
+					cmp	ah,5
+					jz		poke128k_c000_ram5
+					;Mirar si esta RAM 2 paginada
+					cmp	ah,2
+					jz		poke128k_c000_ram2
+					;Mirar si esta RAM7 paginada
+					cmp	ah,7
+					jnz	poke128k_finNC
+					;Mirar si esta pantalla 1
+					test	puerto_32765,8
+					jz		poke128k_finNC
+					sub	bx,32768
+					jmp	short poke128k_finC
+
+poke128k_c000_ram5:
+
+					;Pokear en 16384-32768
+
+					sub	bx,32768
+					mov	byte ptr es:[bx],al
+
+					test 	puerto_32765,8
+					jnz	poke128k_finNC
+					jmp	short poke128k_finC
+
+poke128k_c000_ram2:
+
+					;Pokear en 32768-49152
+					mov	byte ptr es:[bx-16384],al
+					;jmp	short poke128k_finNC
+
+poke128k_finC:
+poke128k_finNC:
+poke128k_fin2:
+					ENDM
+
+multiplica_AL_por_1024 MACRO
+
+					mov	ah,al
+					xor	al,al ;Pagina*256
+					shl	ah,1  ;Pagina*512
+					shl	ah,1	;Pagina*1024
+
+					ENDM
+

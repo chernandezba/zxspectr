@@ -1,0 +1,199 @@
+Version 3.5. 15 September 2013
+. New: Spectrum 128k Spanish Emulation
+. Fixed paging state in debug menu
+. Fixed bug in documentation: tap file header example
+. Some other minor changes in documentation
+. Added help screen
+. Changed menu cursor when filename selection options
+. Changed this file name
+. Added keyboard layout screen file 
+. Changed behaviour of PgDn key in file selection
+. Utilities SMPATAP, TAPABIN, SP_Z80 also for Linux
+. Fixed bug on loading .SP files. It was not working since a long time ago
+. Added spectrum cursors emulation with cursor keys. You can change between kempston or cursor emulation
+  Now the cursor keys emulate spectrum cursors by default
+
+
+Version 3.4. 1 December 2008
+. New: Extended keys emulation
+. Deleted pc speaker emulation. This mode can no longer be used since version 3.1
+. Sorting of file lists. Fixed bug when file limit reached
+. New: Sound recording to .raw files
+. New: Video recording to .vga files
+. Improved error handling
+. Changed some menu names
+. Changed tape emulation functions. Deleted custom ports 204, 205 & 206
+. Fixed bug when inserting files and powering off the floppy motor
+
+
+Version 3.3. 16 September 2008
+. Fixed screen update routine. At least, 1 FPS. Useful for slow computers or MS-DOS emulators.
+
+Version 3.2. 25 September 2006
+. Fixed bug when real tape loading and no sound in Line IN
+. Changed the documentation format. Now it's OpenOffice and PDF
+. Changed synchronization method: SoundBlaster and Timer
+. New: Noise Emulation
+. New: Screen autoframeskip
+. Better version in Windows 2000/XP environment
+
+Version 3.1 Beta 4. 22 March 2003
+. Fixed bug when inserting tapes
+. Added experimental emulation of AY chip. It doesn't have noise emulation and
+  envelopes
+. Added 3 demos to the distribution: THECUBE, NOUMENON, POWER_UP
+
+
+Version 3.1 Beta 3. 13 March 2003
+. Fixed bug in screen updating on Inves mode
+
+
+Version 3.1 Beta 2
+. Added rainbowing effect (again!)
+. Fixed bug when showing registers in 48k mode
+. Now, the default language is English
+. Added Dynamite Dan 2 to the distribution
+
+
+Version 3.1 Beta 1. 1 March 2003
+. Fixed version to work better in windows. Rainbowing effect doesn't work.
+  Screen refresh frequency to 50 Hz
+. Fixed screen flashing bug (it was every 16 screen frames, not 25)
+. Soundblaster sound done through DMA transfers. I have to modify ay chip
+  routines to work.
+
+
+Version 3.0. December 1999
+
+. Colour palette modified.
+. Fixed bug when making RESET.
+. Fixed bug with AY Chip ports.
+. Fixed bug with instructions EX (SP),HL that crashed the emulator
+  when SP=65535.
+. New: Option to view in the debug menu the screen selected (128k)
+  and whether paging is enabled.
+. Fixed bug with instruction CALL and screen updating.
+. Fixed bug with shift instrucions and some flags.
+. New: Spectrum speaker output system through Sound Blaster improved.
+. Fixed bug with RST instructions and ROM modification.
+. Fixed bug with IM2 mode and I=255. Heartland game now works.
+. New: Screen and border update in hi-res mode (rainbowing), with screen
+  frameskip. A Pentium 133 Mhz is needed.
+. New: Emulation of the Spectrums: 16k, 128k, +2 (English, French and 
+  Spanish), +2A (English 4.0, English 4.1). 
+. New: Stereo AY chip output (ACB/ABC). 
+. New: Option to disable noise emulation.
+. Fixed DAA instruction.
+. New: Emulation of the bus idle port (usually port 255). Now
+  Arkanoid and Renegade work.
+. New: Change of ZX files version to support all the machines emulated.
+
+
+Version 2.0. July 1999
+
+. Fixed bug with flags S and P/V after a BIT instruction. The rhino
+  in Sabre Wulf doesn't run backwards anymore!. Thanks to Philip Kendall.
+. New: Option (/eng) to select menu in English.
+. New: I have changed the name of the emulator; indeed it's a small
+  change (from ZXSPECTR to ZXSpectr).
+. New: Option to view the border while real tape loading.
+. New: Added unofficial instructions:
+  -Instructions DD or FD + CB with 1 more parameter: RLCA (IX+3),C,
+   SET 3,(IX+0),D, etc.
+  -Repeated instructions NEG, IM 0,1,2.
+. New: Emulator is now syncronized !!! No more delay factor !!!.
+. New: Added emulation of the Inves Spectrum +.
+. New: Emulation of bit 3 of port FEh.
+. New: Included pseudo-emulation of the contended memory.
+. New: Added option to load and save screen.
+. Accelerated main Z80 routine.
+. New: Improved menu. Options are now chosen by cursor keys.
+. New: Added startup screen.
+. Accelerated loading routine.
+. Fixed bug when pressing cursor keys in the menu which were read by the
+  kempston joystick ports.
+. New: Option to modify relative speed of the CPU.
+. Accelerated paging routine.
+. New: Option to choose different VGA palete: RED, BLUE, YELLOW...
+. New: Option in the debug menu to view ROM and RAM active pages
+  and port 254.
+. New: Added a nice file selector.
+
+  
+Version 1.6. March 1999
+
+. Fixed bug making DI with menu active.
+. Fixed bug when DI+HALT and pressing ESC.
+. New: Option to view ports 65533, 49149.
+
+
+Version 1.5. First version sent to Internet. February 1999
+
+. New: Emulation of the AY-3-8912 Chip.
+. New: Option to POKE.
+. Fixed bug with IM 2 mode.
+. New: Improved menu, with the possibility to continue Z80 emulation with the
+  menu active.
+
+
+Version 1.4. November 1998
+
+. Fixed bug when pressing extended keys, which generates the pressing of
+  Caps Shift if Num Lock is On.
+. New: Option to reduce the interruption frequency (useful for slow PCs on
+  128k mode).
+. New: Option to deactivate any-flag-loading.
+
+
+Version 1.3. September 1998
+
+. New: 128k emulation. If expanded memory (EMS) present, paging is
+  instantaneous.
+. VGA, CGA and Hercules screen modify routine accelerated.
+. Fixed bug with flag P/V.
+. New: Instructions for CPU 386 or superior.
+. Fixed bug in PC clock update.
+. New: Option to deactivate border changing.
+. Fixed bug on saving 128k programs.
+. Fixed bug on loading from .TAP file.
+. New: Real emulation of R register.
+. Fixed bug on saving checksum in .TAP files.
+. New: Delaying more than 255.
+. New options on debug menu.
+. New: Program to convert .TAP to .BIN files.
+. New: Option to load from real tape and saving in TAP file inside the
+  Emulator.
+
+
+Version 1.2. July 1998
+
+. Change of menu colours (VGA).
+. New: Option to create .TAP file in insert and extract tape.
+. New: Emulation of sound (port 254) with Sound Blaster.
+. Fixed bug with flags and instructions CPI, CPD, LDI, LDD.
+. Fixed bug with instructions CPIR, CPDR, which were repeated if BC-1 was
+  0 and weren't repeated if BC-1 wasn't 0.
+. Modified instructions EX (SP),HL ; EX (SP),IX , EX (SP),IY to update screen.
+. Modified instructions PUSH to update screen.
+. Fixed bug with instruction POP AF and flags N and not used flags.
+. Fixed bug with instruction EX AF,AF' and not used flags.
+. New: Palette Change (0 or 1) on CGA.
+. Deleted update screen buffer for CGA, Hercules.
+. New: VGA, CGA, Hercules versions in only one file.
+. VGA screen modify routine accelerated.
+. Fixed bug with instructions LD A,I and LD A,R and flags.
+. New: Option to load from real tape and saving in TAP file.
+
+
+Version 1.1. June 1997
+
+. Loading and saving from flexible disks don't fail anymore
+. New: menu options to Load and Save.
+. New: snapshot file (ZX). SP loading is permitted.
+. Colour Brightess Control (VGA).
+. New: Screen saver.
+. Fixed bug with kempston joystick ports.
+
+
+Version 1.0. April 1996
+
