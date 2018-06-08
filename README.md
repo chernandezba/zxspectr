@@ -18,3 +18,17 @@ Kempston joystick emulation
 Real tape loading through soundblaster
 
 
+
+
+Some screenshots:
+
+Start Screen
+
+![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-1.jpg "Start Screen")
+
+
+Main Menu
+
+![alt text](https://github.com/chernandezba/zxspectr/raw/master/screenshots/zxspectr-2.jpg "Main Menu")
+
+
