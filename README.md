@@ -1,5 +1,5 @@
 ZXSpectr
-
+ 
 https://github.com/chernandezba/zxspectr
 
 It's a ZX Spectrum emulator written entirely in Assembler. It runs under MS-DOS, and pretty well also in Windows and MS-DOS emulators, like Dosemu and Dosbox. It's the first emulating the Inves Spectrum + (a Spanish clone)
