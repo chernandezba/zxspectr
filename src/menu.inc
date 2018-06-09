@@ -204,14 +204,18 @@ menu_inicio_noer3:
 					jmp	menu_inicio_er1
 *
 
+
+
 menu_inicio0:
 					call	print_cadena
 					;      01234567890123456789012345678901
-					db    TESP,"Emulador de ZX Spectrum   v."
-					db    TING,"ZX Spectrum Emulator      v."
-					db    TCOM
+					db         "ZXSpectr v."
 					macro_version
-					db    " "
+					db    "                  "
+					db    TESP,"Emulador de ZX Spectrum   "
+					db    TING,"ZX Spectrum Emulator      "
+					db    TCOM
+					db    "      "
 					db		"(C) Cesar Hernandez  "
 					macro_fecha
 					db		" "
@@ -358,7 +362,7 @@ menu_ayuda_fin:
 								
 
 menu_velocidad:
-					mov   word ptr cursor_x,0f13h
+					mov   word ptr cursor_x,1013h
 					mov	bx,offset buffer_numero
 					mov   byte ptr [bx],0
 					mov	cx,0505h
@@ -4581,7 +4585,7 @@ MENU_FIN 		equ	128
 MENU_SALTO		equ	MENU_NADA
 
 tabla_menu_menu db      0
-					db		MENU_NADA,MENU_NADA,MENU_NADA,MENU_NADA,MENU_NADA
+					db		MENU_NADA,MENU_NADA,MENU_NADA,MENU_NADA,MENU_NADA,MENU_NADA
 
 					db		MENU_OPCION+MENU_MASMENOS+MENU_ARCHIVO
 					dw    menu_cargar_filesel,menu_cargar
