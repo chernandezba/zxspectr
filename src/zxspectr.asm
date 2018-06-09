@@ -384,10 +384,10 @@ if1
   include macros.mac  ;Cargar definiciones de macros
 
   macro_version	MACRO
-						db   "3.5"
+						db   "3.6"
 						ENDM
   macro_fecha 		MACRO
-						db   "15/09/2013"
+						db   "09/06/2018"
 						ENDM
 
 
